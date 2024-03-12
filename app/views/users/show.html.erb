@@ -1,0 +1,10 @@
+<div class="container text-center">
+  <%= cl_image_tag(@user.profile_picture.key, width: 120, height: 120, crop: "fill", class: "rounded-circle") %>
+  <h1><%= @user.username %></h1>
+  <p><%= @user.bio %></p>
+  <% if @user != current_user %>
+  <%= link_to "Add to friends list", user_path(current_user), class: "btn btn-primary" %>
+  <% else %>
+  <%= @friends_list %>
+  <% end %>
+</div>
