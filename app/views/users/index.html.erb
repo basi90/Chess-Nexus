@@ -1,0 +1,11 @@
+<div class="container">
+  <h2 class="text-center">All users</h2>
+  <br>
+  <ul>
+    <% @users.each do |user| %>
+    <h3><%= cl_image_tag(user.profile_picture.key, width: 64, height: 64, crop: "fill", class: "rounded-circle") %>
+    <%= link_to user.username, user_path(user), class: "link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" %></h3>
+    <br>
+    <% end %>
+  </ul>
+</div>
