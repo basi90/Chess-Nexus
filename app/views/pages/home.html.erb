@@ -1,5 +1,14 @@
 <div class="container text-center">
-  <h1>Welcome to Chess Bro</h1>
-  <div class="justify-content-center"><button id="play-btn">PLAY</button></div>
-  <%= link_to "View all profiles", profiles_path %>
+  <div class="home-container">
+    <div>
+      <p class="home-welcome">WELCOME TO</p>
+      <h1><strong>CHESS BRO</strong></h1>
+    </div>
+    <% if user_signed_in? && Profile.where(user_id: current_user.id).exists? %>
+      <div class="justify-content-center"><%= link_to "PLAY", new_board_path, class: "play-btn" %></div>
+    <% elsif user_signed_in? %>
+      <p class="nav-link"><%= link_to "Create profile", new_profile_path, class: "dropdown-item" %></p>
+    <% end %>
+    <div><%= link_to '<i class="fa-solid fa-magnifying-glass"></i>'.html_safe, profiles_path, class: "search-icon" %></div>
+</div>
 </div>

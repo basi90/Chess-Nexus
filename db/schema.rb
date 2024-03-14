@@ -42,6 +42,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_141354) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "boards", force: :cascade do |t|
+    t.text "board_state"
+    t.boolean "finished", default: false
+    t.bigint "white_id_id"
+    t.bigint "black_id_id"
+    t.string "next_to_move"
+    t.text "moves"
+    t.bigint "winner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["black_id_id"], name: "index_boards_on_black_id_id"
+    t.index ["white_id_id"], name: "index_boards_on_white_id_id"
+    t.index ["winner_id"], name: "index_boards_on_winner_id"
+  end
+
   create_table "friendships", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -74,6 +89,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_141354) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "boards", "users", column: "black_id_id"
+  add_foreign_key "boards", "users", column: "white_id_id"
+  add_foreign_key "boards", "users", column: "winner_id"
   add_foreign_key "friendships", "profiles", column: "asker_id"
   add_foreign_key "friendships", "profiles", column: "receiver_id"
   add_foreign_key "profiles", "users"

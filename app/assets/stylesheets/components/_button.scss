@@ -1,16 +1,72 @@
-#play-btn {
+.play-btn {
   display: inline-block;
+  text-decoration: none;
   text-align: center;
   font-size: 4rem;
   color: white;
   background-color: black;
-  font-weight: 900;
+  font-weight: 800;
   border: none;
   padding: 24px 48px;
   border-radius: 24px;
+  margin: 24px;
+  transition: 1s ease;
 }
 
-#play-btn:hover {
-  border: 10px solid black;
-  transition: 1s ease
+.play-btn:hover {
+  color: black;
+  background-color: white;
+  font-weight: 600;
+  transition: 1s ease;
+}
+
+.play-btn:active {
+  color: white;
+  background-color: black;
+  transition: 0s;
+}
+
+.search-icon {
+  text-decoration: none;
+  color: black !important;
+  font-size: 2rem;
+}
+
+.search-btn {
+  color: white;
+  background-color: black;
+  border: none;
+  font-weight: bold;
+  padding: 0 24px;
+  transition: 1s ease;
+}
+
+.dropdown-menu {
+  padding: 0px;
+}
+
+.dropdown-item:hover{
+  background-color: black !important;
+  color: white !important;
+}
+
+.dropdown-item:active {
+  background-color: black !important;
+}
+
+.add-friend-btn {
+  color: white;
+  background-color: black;
+  border: none;
+  font-weight: bold;
+  padding: 12px 24px;
+  text-decoration: none;
+  border-radius: 24px;
+  transition: 1s ease;
+}
+
+.add-friend-btn:hover {
+  color: black;
+  background-color: white;
+  transition: 1s ease;
 }

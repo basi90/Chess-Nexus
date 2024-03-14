@@ -1,15 +1,28 @@
 <div class="container">
-  <h2 class="text-center">All profiles</h2>
-  <br>
-
+  <h2 class="text-center new-header">FIND A FRIEND</h2>
+  <div class="row justify-content-center">
+    <div class="col-sm-4 my-3">
+      <%= form_with url: profiles_path, method: :get, class: "d-flex" do %>
+        <%= text_field_tag :query,
+              params[:query],
+              class: "form-control",
+              placeholder: "Username"
+          %>
+        <%= submit_tag "Search", name: "", class: "search-btn" %>
+      <% end %>
+    </div>
+  </div>
+  <div class="friends-container">
     <% @profiles.each do |profile| %>
-    <% if Profile.where(user_id: profile.user_id).exists? %>
-      <%= cl_image_tag(profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
-    <% else %>
-      picture
+    <div class="profile-item">
+      <% if Profile.where(user_id: profile.user_id).exists? %>
+        <%= cl_image_tag(profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
+      <% else %>
+        picture
+      <% end %>
+      <%= link_to profile.username.upcase, profile_path(profile), class: "new-header" %></h3>
+    </div>
     <% end %>
-    <%= link_to profile.username, profile_path(profile), class: "link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" %></h3>
-    <br>
-    <% end %>
+  </div>
 
 </div>

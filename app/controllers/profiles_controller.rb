@@ -18,6 +18,9 @@ class ProfilesController < ApplicationController
 
   def index
     @profiles = Profile.all
+    if params[:query].present?
+      @profiles = @profiles.where("username ILIKE ?", "%#{params[:query]}%")
+    end
   end
 
   private
