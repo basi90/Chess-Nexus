@@ -2,27 +2,35 @@
 <div class="profile-container">
   <div class="profile-top">
     <%= cl_image_tag @profile.profile_picture.key, width: 200, height: 200, crop: "fill", class: "rounded-circle" %>
-    <h1><%= @profile.username %></h1>
+    <h1 class="new-header"><%= @profile.username.upcase %></h1>
     <p><%= @profile.bio %></p>
-    <div class="profile-stats"><i class="fa-solid fa-trophy"></i> stats go here</div>
+
+    <div class="profile-stats">
+      <div class="stats"><p>Wins</p><p><strong></strong>12</p></div>
+      <div class="stats"><p>Losses</p><p><strong></strong>8</p></div>
+      <div class="stats"><p>Draws</p><p><strong></strong>2</p></div>
+    </div>
+
+    <%# <div class="profile-stats"><i class="fa-solid fa-trophy"></i> stats go here</div> %>
   </div>
 
   <div class="profile-friends">
     <% if @profile.user != current_user  %>
-      <%= link_to "Add to friends list", profile_friendships_path(@profile), data: {turbo_method: :post}, class: "btn btn-primary" %>
+      <%= link_to "ADD FRIEND", profile_friendships_path(@profile), data: {turbo_method: :post}, class: "add-friend-btn" %>
 
     <% elsif Friendship.where(asker: current_user.profile).exists? %>
-      <p>Your friends:</p>
+      <p class="new-header">YOUR FRIENDS</p>
 
-      <div class="friend-card">
-        <% @friendships.each do |friendship| %>
-        <% if Profile.where(user_id: friendship.receiver.user_id).exists? %>
-          <%= cl_image_tag(friendship.receiver.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
-        <% else %>
-          picture
-        <% end %>
-        <%= link_to friendship.receiver.username, profile_path(friendship.receiver), class: "link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" %></h3>
+      <div class="friends-container">
+        <div class="profile-item">
+          <% @friendships.each do |friendship| %>
+          <% if Profile.where(user_id: friendship.receiver.user_id).exists? %>
+            <%= cl_image_tag(friendship.receiver.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
+          <% end %>
+          <%= link_to friendship.receiver.username, profile_path(friendship.receiver), class: "new-header" %></h3>
+        </div>
       </div>
+
     <% end %>
 
     <% end %>

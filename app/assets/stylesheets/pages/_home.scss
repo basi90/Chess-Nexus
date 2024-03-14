@@ -1,4 +1,17 @@
 // Specific CSS for your home-page
 .body {
   background-color: white !important;
+  font-family: "Syne", sans-serif;
+  text-decoration: none !important;
+}
+
+.home-welcome {
+  margin: 0;
+}
+
+.home-container {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

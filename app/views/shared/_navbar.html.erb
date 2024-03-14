@@ -1,7 +1,7 @@
 <div class="navbar navbar-expand-sm navbar-light navbar-lewagon">
   <div class="container-fluid">
     <%= link_to root_path, class: "navbar-brand" do %>
-      <%= image_tag "https://static.thenounproject.com/png/108498-200.png" %>
+      <%= image_tag "https://cdn.pixabay.com/photo/2012/04/18/00/42/chess-36310_1280.png" %>
     <% end %>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,7 +13,10 @@
         <% if user_signed_in? %>
           <li class="nav-item">
             <% if Profile.where(user_id: current_user.id).exists? %>
-              <%= link_to current_user.profile.username, "#", class: "nav-link" %>
+              <p class="nav-link"><%= current_user.profile.username %></p>
+            <% else %>
+             <p class="nav-link"><%= link_to "Create profile", new_profile_path, class: "dropdown-item" %></p>
+              <%#= link_to current_user.profile.username, "#", class: "nav-link" %>
             <% end %>
           </li>
           <li class="nav-item dropdown">
@@ -30,8 +33,8 @@
               <% if Profile.where(user_id: current_user.id).exists? %>
                 <%= link_to "View profile", profile_path(current_user.profile), class: "dropdown-item" %>
                 <%#= link_to "Edit profile", new_profile_path, class: "dropdown-item" %>
-              <% else %>
-                <%= link_to "Create profile", new_profile_path, class: "dropdown-item" %>
+              <%# else %>
+                <%#= link_to "Create profile", new_profile_path, class: "dropdown-item" %>
               <% end %>
 
               <%= link_to "Edit Login details", edit_user_registration_path, class: "dropdown-item" %>
