@@ -1,0 +1,16 @@
+#play-btn {
+  display: inline-block;
+  text-align: center;
+  font-size: 4rem;
+  color: white;
+  background-color: black;
+  font-weight: 900;
+  border: none;
+  padding: 24px 48px;
+  border-radius: 24px;
+}
+
+#play-btn:hover {
+  border: 10px solid black;
+  transition: 1s ease
+}

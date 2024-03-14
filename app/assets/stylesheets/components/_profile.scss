@@ -1,0 +1,37 @@
+.profile-container {
+  width: 75vw;
+  margin: 0 auto;
+  // display: flex;
+  // justify-content: space-between;
+}
+.profile-top {
+  text-align: center;
+}
+
+.profile-top h1 {
+  margin-top: 24px;
+  font-size: 2rem;
+}
+
+.profile-stats {
+  background-color: lightgray;
+  color: rgb(94, 94, 94);
+  font-style: italic;
+  width: 16vw;
+  padding: 12px 24px;
+  border-radius: 12px;
+  margin: 0 auto 48px auto;
+
+}
+
+.profile-friends {
+  width: 50vw;
+  margin: 0 auto;
+  // border-top: 1px solid gray;
+  // display: flex;
+  text-align: center;
+}
+
+.friend-card {
+
+}

@@ -1,0 +1,15 @@
+<div class="container">
+  <h2 class="text-center">All profiles</h2>
+  <br>
+
+    <% @profiles.each do |profile| %>
+    <% if Profile.where(user_id: profile.user_id).exists? %>
+      <%= cl_image_tag(profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
+    <% else %>
+      picture
+    <% end %>
+    <%= link_to profile.username, profile_path(profile), class: "link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" %></h3>
+    <br>
+    <% end %>
+
+</div>
