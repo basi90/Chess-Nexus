@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_13_131152) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_13_141354) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,19 +42,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_131152) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "boards", force: :cascade do |t|
-    t.text "board_state"
-    t.boolean "finished", default: false
-    t.bigint "white_id_id"
-    t.bigint "black_id_id"
-    t.string "next_to_move"
-    t.text "moves"
-    t.bigint "winner_id"
+  create_table "friendships", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["black_id_id"], name: "index_boards_on_black_id_id"
-    t.index ["white_id_id"], name: "index_boards_on_white_id_id"
-    t.index ["winner_id"], name: "index_boards_on_winner_id"
+    t.bigint "asker_id", null: false
+    t.bigint "receiver_id", null: false
+    t.index ["asker_id"], name: "index_friendships_on_asker_id"
+    t.index ["receiver_id"], name: "index_friendships_on_receiver_id"
+  end
+
+  create_table "profiles", force: :cascade do |t|
+    t.string "username"
+    t.string "bio"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -65,15 +68,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_131152) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "username"
-    t.string "bio"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "boards", "users", column: "black_id_id"
-  add_foreign_key "boards", "users", column: "white_id_id"
-  add_foreign_key "boards", "users", column: "winner_id"
+  add_foreign_key "friendships", "profiles", column: "asker_id"
+  add_foreign_key "friendships", "profiles", column: "receiver_id"
+  add_foreign_key "profiles", "users"
 end

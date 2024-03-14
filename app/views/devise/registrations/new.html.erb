@@ -4,10 +4,6 @@
     <%= f.error_notification %>
 
     <div class="form-inputs">
-      <%= f.input :username,
-                  required: true,
-                  autofocus: true,
-                  input_html: { autocomplete: "username" }%>
       <%= f.input :email,
                   required: true,
                   input_html: { autocomplete: "email" }%>
@@ -18,9 +14,6 @@
       <%= f.input :password_confirmation,
                   required: true,
                   input_html: { autocomplete: "new-password" } %>
-      <%= f.input :profile_picture, as: :file %>
-      <%= f.input :bio,
-                  input_html: { autocomplete: "bio" }%>
     </div>
 
     <div class="form-actions">

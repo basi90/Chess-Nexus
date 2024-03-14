@@ -1,10 +1,16 @@
 <div class="container text-center">
-  <%= cl_image_tag(@user.profile_picture.key, width: 120, height: 120, crop: "fill", class: "rounded-circle") %>
-  <h1><%= @user.username %></h1>
-  <p><%= @user.bio %></p>
-  <% if @user != current_user %>
-  <%= link_to "Add to friends list", user_path(current_user), class: "btn btn-primary" %>
+  <%= cl_image_tag(@profile_picture.key, width: 120, height: 120, crop: "fill", class: "rounded-circle") %>
+  <h1><%= @profile.username %></h1>
+  <p><%= @profile.bio %></p>
+  <% if @profile.user != current_user %>
+  <%= link_to "Add to friends list", profile_friendships_path(@profile), data: {turbo_method: :post}, class: "btn btn-primary" %>
   <% else %>
-  <%= @friends_list %>
+  <h2>Friends:</h2>
+  <% @friendships = Friendship.where(asker_id_id: current_user) %>
+  <% @friendships.each do |friendship| %>
+  <h3><%= cl_image_tag(friendship.receiver_id.profile_picture.key, width: 64, height: 64, crop: "fill", class: "rounded-circle") %>
+    <%= link_to friendship.receiver_id.username, user_path(friendship.receiver_id), class: "link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" %></h3>
+    <br>
+  <% end %>
   <% end %>
 </div>
