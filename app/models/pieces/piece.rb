@@ -1,4 +1,4 @@
-class Piece < Tablesless
+class Piece < Tableless
   attr_accessor :color, :current_position
 
   def initialize(color)
