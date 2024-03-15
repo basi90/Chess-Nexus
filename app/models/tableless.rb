@@ -1,4 +1,4 @@
-module Tableless
+class Tableless
   extend ActiveSupport::Concern
 
   included do
