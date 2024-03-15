@@ -1,39 +1,40 @@
 
 <div class="profile-container">
   <div class="profile-top">
-    <%= cl_image_tag @profile.profile_picture.key, width: 200, height: 200, crop: "fill", class: "rounded-circle" %>
+    <%= cl_image_tag @profile.profile_picture.key, width: 200, height: 200, crop: "fill", class: "rounded-circle profile-img" %>
     <h1 class="new-header"><%= @profile.username.upcase %></h1>
     <p><%= @profile.bio %></p>
 
     <div class="profile-stats">
-      <div class="stats"><p>Wins</p><p><strong></strong>12</p></div>
-      <div class="stats"><p>Losses</p><p><strong></strong>8</p></div>
-      <div class="stats"><p>Draws</p><p><strong></strong>2</p></div>
+      <div class="stats"><p>Wins</p><p><strong>12</strong></p></div>
+      <div class="stats"><p>Losses</p><p><strong>8</strong></p></div>
+      <div class="stats"><p>Draws</p><p><strong>2</strong></p></div>
     </div>
-
-    <%# <div class="profile-stats"><i class="fa-solid fa-trophy"></i> stats go here</div> %>
   </div>
+</div>
 
-  <div class="profile-friends">
-    <% if @profile.user != current_user  %>
-      <%= link_to "ADD FRIEND", profile_friendships_path(@profile), data: {turbo_method: :post}, class: "add-friend-btn" %>
+<%# <div class="profile-friends"> %>
+<div class="friends-container">
+  <% if @profile.user != current_user && !Friendship.where(asker: current_user.profile, receiver: @profile).exists? %>
+    <%= link_to "FOLLOW", profile_friendships_path(@profile), data: {turbo_method: :post}, class: "add-friend-btn" %><br>
+    <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, url_for(:back) %>
 
-    <% elsif Friendship.where(asker: current_user.profile).exists? %>
-      <p class="new-header">YOUR FRIENDS</p>
+  <% elsif @profile.user != current_user && Friendship.where(asker: current_user.profile, receiver: @profile).exists? %>
+    <p class="following">FOLLOWING</p><br>
+    <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, url_for(:back) %>
 
-      <div class="friends-container">
-        <div class="profile-item">
-          <% @friendships.each do |friendship| %>
-          <% if Profile.where(user_id: friendship.receiver.user_id).exists? %>
-            <%= cl_image_tag(friendship.receiver.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
-          <% end %>
-          <%= link_to friendship.receiver.username, profile_path(friendship.receiver), class: "new-header" %></h3>
-        </div>
+  <% elsif @profile.user == current_user && Friendship.where(asker: current_user.profile).exists? %>
+    <p class="new-header">FOLLOWING</p>
+
+    <% @friendships.each do |friendship| %>
+      <div class="profile-item">
+        <% if Profile.where(user_id: friendship.receiver.user_id).exists? %>
+          <%= cl_image_tag(friendship.receiver.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
+        <% end %>
+        <%= link_to friendship.receiver.username, profile_path(friendship.receiver), class: "new-header" %></h3>
       </div>
-
     <% end %>
 
-    <% end %>
-  </div>
 
+  <% end %>
 </div>
