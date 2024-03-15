@@ -9,3 +9,37 @@
 .navbar-lewagon .navbar-brand img {
   width: 40px;
 }
+
+.nav-profile {
+  display: flex;
+  align-items: center;
+}
+
+.nav-profile p {
+  margin: 0px;
+}
+
+.nav-profile a {
+  margin-left: 8px;
+}
+
+a.dropdown-item {
+  margin: 0;
+}
+
+.dropdown-menu {
+  padding: 0px;
+}
+
+.dropdown-item:hover{
+  background-color: black !important;
+  color: white !important;
+}
+
+.dropdown-item:active {
+  background-color: black !important;
+}
+
+.dropdown-menu-end {
+  margin-right: 8px;
+}
