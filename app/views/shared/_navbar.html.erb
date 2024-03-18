@@ -14,9 +14,10 @@
         <p><%#= current_user.profile.username %></p>
         <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <% if Profile.where(user: current_user).exists? %>
-            <%= cl_image_tag(current_user.profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
+            <%#= cl_image_tag(current_user.profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
+            <%= image_tag("https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.png", width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
           <% else %>
-              <%= image_tag("https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.png", width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
+            <%= image_tag("https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.png", width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
           <% end %>
         </a>
 
