@@ -37,7 +37,7 @@
       <div>
           <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
       </div>
-  </div>
+</div>
 
   <div class="player-info">
     <p class="new-header"><%= current_user.profile.username %></p>
@@ -48,4 +48,6 @@
     <i class="fa-regular fa-comment"></i>
   </div> %>
 
-<%= link_to "Chat", game_chatroom_path(@game, @chatroom) %>
+  <div class="chat-icon">
+    <%= link_to '<i class="fa-regular fa-comment"></i>'.html_safe, game_chatroom_path(@game, @chatroom), class: "search-icon" %>
+  </div>

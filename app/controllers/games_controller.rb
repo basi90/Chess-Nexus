@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
   def new
-    @game = Game.create(white_id: current_user.id, black_id: User.find(41).id)
+    @game = Game.create(white: current_user, black: User.find(41))
     redirect_to game_path(@game)
   end
 

@@ -5,6 +5,13 @@
 
 <%# <iframe id="bg-video" width="100%" height="100%" src='https://www.youtube.com/embed/kAdRz_kDDqw?si=t7V5kCwGwRTuoo6D&amp;controls=0?rel=0;&autoplay=1' allow="autoplay"></iframe> %>
 
+<%# <%= cl_video_tag("chess_wide-w_2_odugkl", width: 150, height: 100, crop: :fill, controls: true) %>
+
+<cl-video public-id="chess_wide-w_2_odugkl" fetch-format="auto" effect="volume:mute"
+    flags="streaming_attachment" autoplay id="video" #video>
+
+</cl-video>
+
 <div class="container text-center">
   <div class="home-container">
     <div>
