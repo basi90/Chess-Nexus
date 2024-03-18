@@ -12,9 +12,11 @@
       <h1><strong>CHESS BRO</strong></h1>
     </div>
     <% if user_signed_in? && Profile.where(user_id: current_user.id).exists? %>
-      <div class="justify-content-center"><%= link_to "PLAY", new_board_path, class: "play-btn" %></div>
+      <div class="justify-content-center"><%= link_to "PLAY", new_game_path, class: "play-btn" %></div>
     <% elsif user_signed_in? %>
       <p class="nav-link"><%= link_to "Create profile", new_profile_path, class: "new-header" %></p>
+    <% else %>
+      <p class="nav-link"><%= link_to "Log in", new_user_session_path, class: "new-header" %></p>
     <% end %>
     <div><%= link_to '<i class="fa-solid fa-magnifying-glass"></i>'.html_safe, profiles_path, class: "search-icon" %></div>
 </div>

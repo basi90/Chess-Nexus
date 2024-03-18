@@ -85,3 +85,18 @@
   margin-bottom: 24px;
   border: none;
 }
+
+.chat-btn {
+  color: white !important;
+  background-color: black;
+  border: none;
+  font-weight: bold;
+  padding: 0 24px;
+  height: 38px;
+  transition: 1s ease;
+}
+
+.chat-btn:hover {
+  color: black !important;
+  background-color: white;
+}
