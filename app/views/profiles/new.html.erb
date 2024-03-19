@@ -1,4 +1,4 @@
-  <div class="container">
+  <div class="container-form">
     <h2 class="new-header">Set up your profile</h2>
     <%= simple_form_for(@profile) do |f| %>
       <%= f.error_notification %>
@@ -13,7 +13,7 @@
       </div>
 
       <div class="form-actions">
-        <%= f.button :submit, "Submit" %>
+        <%= f.button :submit, "Submit", class: "btn-form" %>
       </div>
     <% end %>
   </div>

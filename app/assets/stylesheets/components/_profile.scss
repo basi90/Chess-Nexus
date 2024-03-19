@@ -1,11 +1,16 @@
 .profile-container {
-  width: 50vw;
+  width: 75vw;
   margin: 0 auto;
   // display: flex;
   // justify-content: space-between;
 }
+
 .profile-top {
   text-align: center;
+}
+
+.profile-img {
+  border: solid 1px rgb(200, 200, 200);
 }
 
 .profile-top h1 {
@@ -18,49 +23,79 @@
   // color: rgb(94, 94, 94);
   // background-color: rgb(236, 236, 236);
   color: rgb(150, 150, 150);
-  font-style: italic;
   width: 24vw;
   padding: 12px 24px;
   border-radius: 8px;
   margin: 0 auto 48px auto;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
 }
 
 .stats {
-  border-right: 1px solid gray;
-  border-left: 1px solid gray;
+  border-right: 1px solid rgb(202, 202, 202);
   padding: 0px 16px;
   // background-color: rgb(236, 236, 236);
+}
+
+.stats:last-child {
+  border: none;
 }
 
 .stats p {
   margin: 0;
 }
 
-.profile-friends {
-  width: 50vw;
+.following {
+  color: white;
+  background-color: rgb(142, 142, 142);
+  border: none;
+  font-weight: bold;
+  padding: 12px 24px;
+  width: 200px;
   margin: 0 auto;
-  // border-top: 1px solid gray;
+}
+
+// .profile-friends {
+//   width: 50vw;
+//   margin: 0 auto;
+//   // border-top: 1px solid gray;
+//   // display: flex;
+//   text-align: center;
+// }
+
+.search-bar {
+  width: 80vw;
+  margin: 0 auto;
   // display: flex;
-  text-align: center;
+  // justify-content: space-between;
 }
 
 .friends-container {
-  margin-top: 48px;
+  margin: 48px auto;
+  width: 80vw;
   text-align: center;
   color: black !important;
 }
 
 .profile-item {
-  width: 50vw;
+  width: 100%;
   margin: 16px auto;
   border-bottom: 1px solid rgb(232, 232, 232);
   // margin-top: 16px;
   padding-bottom: 16px;
+  transition: 0.4s ease;
 }
 
-// .profile-item:hover {
-// background-color: black;
-// color: white;
-// }
+.profile-item:hover {
+  margin: 24px auto;
+  transition: 0.4s ease;
+}
+
+.profile-item:last-child {
+  border: none;
+}
+
+.container-form {
+  width: 60vw;
+  margin: 0 auto;
+}
