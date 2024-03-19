@@ -1,25 +1,9 @@
-<%# <video id="bg-video" autoplay loop muted>
-  <source src="https://www.dropbox.com/home/BACK_UPS/IDIOTBOX/1?preview=IDIOTBOX_v2.mp4" type="video/mp4">
-</video> %>
-<%# <% <iframe allow="autoplay" src="https://www.dropbox.com/scl/fi/mi164wchi5pbfhi497tvk/IDIOTBOX_v2.mp4?rlkey=ahokirycjar6dm25p6ahd6h28&dl=0" id="bg-video" width="100%" height="100%" frameborder="0" allowfullscreen  loop style="height:100%;position:absolute;left:0px;top:0px;overflow:hidden;"></iframe> %>
-
-<%# <iframe id="bg-video" width="100%" height="100%" src='https://www.youtube.com/embed/kAdRz_kDDqw?si=t7V5kCwGwRTuoo6D&amp;controls=0?rel=0;&autoplay=1&loop=1' allow="autoplay"></iframe> %>
-
-<%# <%= cl_video_tag("chess_wide-w_2_odugkl", width: 150, height: 100, crop: :fill, controls: true) %>
-
-<%# <cl-video public-id="chess_wide-w_2_odugkl" fetch-format="auto" effect="volume:mute"
-    flags="streaming_attachment" autoplay id="video" #video>
-</cl-video> %>
-
-<%# <video class="bg-video" class="bg-video">
-  <source src="../../assets/images/chess_wide-w_2.mp4" type="video/mp4">
-</video> %>
 
 <div class="container text-center">
   <div class="home-container">
     <div>
       <p class="home-welcome">WELCOME TO</p>
-      <h1><strong>CHESS BRO</strong></h1>
+      <h2><strong>CHESS BRO</strong></h2>
     </div>
     <% if user_signed_in? && Profile.where(user_id: current_user.id).exists? %>
       <div class="justify-content-center"><%= link_to "PLAY", new_game_path, class: "play-btn", data: { turbo: "false" } %></div>
@@ -31,3 +15,7 @@
     <div><%= link_to '<i class="fa-solid fa-magnifying-glass"></i>'.html_safe, profiles_path, class: "search-icon" %></div>
   </div>
 </div>
+
+<%# <div class="video-background">
+  <iframe src="https://www.youtube.com/embed/kAdRz_kDDqw?si=0fe6KT771LWUqidH?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&mute=1" frameborder="0" allowfullscreen></iframe>
+</div> %>
