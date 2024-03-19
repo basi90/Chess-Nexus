@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     resources :friendships, only: [:create, :index]
   end
 
-  resources :games do
+  resources :games, only: [:new, :show] do
     resources :chatrooms, only: :show
   end
 
