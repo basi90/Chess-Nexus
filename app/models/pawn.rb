@@ -1,10 +1,11 @@
 class Pawn < Piece
-  attr_accessor :en_passant
+  attr_accessor :en_passant, :current_position
 
-  def initialize(color)
+  def initialize(color, position)
     super(color)
     @moved = false
     @en_passant = false
+    @current_position = position
   end
 
   def to_s
@@ -12,7 +13,22 @@ class Pawn < Piece
   end
 
   def move_to(new_position, board_state)
-    self.current_position = new_position
+    if (new_position[0] - current_position[0]).abs == 2
+      @en_passant = true
+    else
+      @en_passant = false
+    end
+
+    if en_passant_capture?(new_position, board_state)
+      captured_pawn_position = [current_position[0], new_position[1]]
+      board_state[captured_pawn_position[0]][captured_pawn_position[1]] = nil
+    end
+
+
+    board_state[new_position[0]][new_position[1]] = self
+    board_state[current_position[0]][current_position[1]] = nil
+
+    @current_position = new_position
     @moved = true
 
     if color == :white && new_position[0] == 0
@@ -22,7 +38,7 @@ class Pawn < Piece
     end
   end
 
-  def valid_moves(current_position, board_state)
+  def valid_moves(board_state)
     valid_moves = []
 
     direction = color == :white ? -1 : 1
@@ -34,10 +50,10 @@ class Pawn < Piece
     valid_moves << two_up if !@moved && valid_square?(two_up, board_state)
 
     capture_left = [current_position[0] + direction, current_position[1] - 1]
-    valid_moves << capture_left if valid_capture?(capture_left, board_state)
+    valid_moves << capture_left if valid_capture?(capture_left, board_state) || en_passant_capture?(capture_left, board_state)
 
     capture_right = [current_position[0] + direction, current_position[1] + 1]
-    valid_moves << capture_right if valid_capture?(capture_right, board_state)
+    valid_moves << capture_right if valid_capture?(capture_right, board_state) || en_passant_capture?(capture_right, board_state)
 
     valid_moves
   end
@@ -50,6 +66,17 @@ class Pawn < Piece
 
   def valid_capture?(square, board_state)
     square[0].between?(0, 7) && square[1].between?(0, 7) && board_state[square[0]][square[1]] && board_state[square[0]][square[1]].color != color
+  end
+
+  def en_passant_capture?(square, board_state)
+    return false unless square[0].between?(0, 7) && square[1].between?(0, 7)
+    return false unless board_state[current_position[0]] && board_state[current_position[0]][square[1]]
+    return false unless board_state[square[0]][square[1]].nil?
+    return false unless board_state[current_position[0]][square[1]] && board_state[current_position[0]][square[1]].is_a?(Pawn)
+    return false unless board_state[current_position[0]][square[1]].color != color
+    return false unless board_state[current_position[0]][square[1]].en_passant
+
+    true
   end
 
   def promote(new_position, board_state)
