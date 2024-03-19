@@ -1,12 +1,10 @@
 class Pawn < Piece
   attr_accessor :en_passant, :current_position
-
-  def initialize(color, position)
-    super(color)
+  def initialize(color, current_position)
+    super(color, current_position)
     @moved = false
     @en_passant = false
-    @current_position = position
-
+  end
 
   def to_s
     color == :white ? "♟" : "♙"
@@ -23,7 +21,6 @@ class Pawn < Piece
       captured_pawn_position = [current_position[0], new_position[1]]
       board_state[captured_pawn_position[0]][captured_pawn_position[1]] = nil
     end
-
 
     board_state[new_position[0]][new_position[1]] = self
     board_state[current_position[0]][current_position[1]] = nil
@@ -54,7 +51,7 @@ class Pawn < Piece
 
     capture_right = [current_position[0] + direction, current_position[1] + 1]
     valid_moves << capture_right if valid_capture?(capture_right, board_state) || en_passant_capture?(capture_right, board_state)
-    
+
     valid_moves
   end
 
