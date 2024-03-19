@@ -1,18 +1,22 @@
 class Bishop < Piece
+  attr_accessor :current_position
 
-  def initialize(color)
-    super(color)
+  def initialize(color, current_position)
+    super(color, current_position)
   end
 
   def to_s
     color == :white ?  "♝" : "♗"
   end
 
-  def move_to(new_position)
-    self.current_position = new_position
+  def move_to(new_position, board_state)
+    board_state[new_position[0]][new_position[1]] = self
+    board_state[current_position[0]][current_position[1]] = nil
+
+    @current_position = new_position
   end
 
-  def valid_moves(current_position, board_state)
+  def valid_moves(board_state)
     valid_moves = []
 
     diagonals = [[1, 1], [1, -1], [-1, 1], [-1, -1]]

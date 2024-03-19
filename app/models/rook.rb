@@ -1,7 +1,8 @@
 class Rook < Piece
+  attr_accessor :current_position, :moved
 
-  def initialize(color)
-    super(color)
+  def initialize(color, current_position)
+    super(color, current_position)
     @moved = false
   end
 
@@ -9,12 +10,15 @@ class Rook < Piece
     color == :white ?  "♜" : "♖"
   end
 
-  def move_to(new_position)
-    self.current_position = new_position
+  def move_to(new_position, board_state)
+    board_state[new_position[0]][new_position[1]] = self
+    board_state[current_position[0]][current_position[1]] = nil
+
+    @current_position = new_position
     @moved = true
   end
 
-  def valid_moves(current_position, board_state)
+  def valid_moves(board_state)
     valid_moves = []
 
     cardinals = [[-1, 0], [1, 0], [0, -1], [0, 1]]
