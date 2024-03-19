@@ -13,7 +13,9 @@ class ProfilesController < ApplicationController
 
   def show
     @profile = Profile.find(params[:id])
-    @friendships = Friendship.where(asker: current_user.profile)
+    if Profile.where(user: current_user).exists?
+      @friendships = Friendship.where(asker: current_user.profile)
+    end
   end
 
   def index

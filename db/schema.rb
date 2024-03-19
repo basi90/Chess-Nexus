@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_13_141354) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_18_104335) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -57,6 +57,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_141354) do
     t.index ["winner_id"], name: "index_boards_on_winner_id"
   end
 
+  create_table "chatrooms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "game_id"
+    t.index ["game_id"], name: "index_chatrooms_on_game_id"
+  end
+
   create_table "friendships", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -64,6 +71,31 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_141354) do
     t.bigint "receiver_id", null: false
     t.index ["asker_id"], name: "index_friendships_on_asker_id"
     t.index ["receiver_id"], name: "index_friendships_on_receiver_id"
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.text "board_state"
+    t.boolean "finished", default: false
+    t.bigint "white_id"
+    t.bigint "black_id"
+    t.string "next_to_move"
+    t.text "moves"
+    t.bigint "winner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["black_id"], name: "index_games_on_black_id"
+    t.index ["white_id"], name: "index_games_on_white_id"
+    t.index ["winner_id"], name: "index_games_on_winner_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.string "content"
+    t.bigint "chatroom_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chatroom_id"], name: "index_messages_on_chatroom_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -92,7 +124,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_141354) do
   add_foreign_key "boards", "users", column: "black_id_id"
   add_foreign_key "boards", "users", column: "white_id_id"
   add_foreign_key "boards", "users", column: "winner_id"
+  add_foreign_key "chatrooms", "games"
   add_foreign_key "friendships", "profiles", column: "asker_id"
   add_foreign_key "friendships", "profiles", column: "receiver_id"
+  add_foreign_key "games", "users", column: "black_id"
+  add_foreign_key "games", "users", column: "white_id"
+  add_foreign_key "games", "users", column: "winner_id"
+  add_foreign_key "messages", "chatrooms"
+  add_foreign_key "messages", "users"
   add_foreign_key "profiles", "users"
 end
