@@ -34,7 +34,7 @@ class Board
     @board_state[0][6] = Knight.new(:black)
     @board_state[0][7] = Rook.new(:black)
 
-    @board_state[1].map!.with_index { |square, index| Pawn.new(:black) }
+    @board_state[1].map!.with_index { |square, index| Pawn.new(:black, [1, index]) }
 
     @board_state[7][0] = Rook.new(:white)
     @board_state[7][1] = Knight.new(:white)
@@ -45,6 +45,6 @@ class Board
     @board_state[7][6] = Knight.new(:white)
     @board_state[7][7] = Rook.new(:white)
 
-    @board_state[6].map!.with_index { |square, index| Pawn.new(:white) }
+    @board_state[6].map!.with_index { |square, index| Pawn.new(:white, [6, index]) }
   end
 end
