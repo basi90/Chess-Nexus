@@ -8,8 +8,8 @@
   <div class="board-container">
 
     <div class="player-info">
-      <%= cl_image_tag(Profile.find(31).profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
-      <p class="new-header"><%= Profile.find(31).username %></p>
+      <%#= cl_image_tag(Profile.find(31).profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
+      <p class="new-header" data-game-subscription-target="opponent"><%= @game.black.present? ? @game.black.profile.username : "Waiting for opponent..." %></p>
     </div>
 
     <div class="chessboard">
@@ -43,13 +43,9 @@
   </div>
 
   <div class="player-info">
-    <p class="new-header"><%= current_user.profile.username %></p>
-    <%= cl_image_tag(current_user.profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
+    <p class="new-header"><%= @game.white.profile.username %></p>
+    <%#= cl_image_tag(@game.white.profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
   </div>
-
-  <%# <div class="footer">
-    <i class="fa-regular fa-comment"></i>
-  </div> %>
 
   <div class="chat-icon">
     <%= link_to '<i class="fa-regular fa-comment"></i>'.html_safe, game_chatroom_path(@game, @chatroom), class: "search-icon" %>
