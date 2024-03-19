@@ -6,7 +6,7 @@ class Pawn < Piece
     @moved = false
     @en_passant = false
     @current_position = position
-  end
+
 
   def to_s
     color == :white ? "♟" : "♙"
@@ -54,7 +54,7 @@ class Pawn < Piece
 
     capture_right = [current_position[0] + direction, current_position[1] + 1]
     valid_moves << capture_right if valid_capture?(capture_right, board_state) || en_passant_capture?(capture_right, board_state)
-
+    
     valid_moves
   end
 
