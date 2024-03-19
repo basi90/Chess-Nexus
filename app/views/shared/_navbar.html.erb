@@ -3,6 +3,7 @@
     <div class="nav-left">
       <%= link_to root_path, class: "navbar-brand" do %>
         <%= image_tag "https://cdn.pixabay.com/photo/2012/04/18/00/42/chess-36310_1280.png" %>
+        <%# <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, :back %>
       <% end %>
     </div>
 
@@ -11,7 +12,7 @@
     <% if user_signed_in? %>
 
       <div class="nav-profile">
-        <p><%#= current_user.profile.username %></p>
+        <p><%= current_user.profile.username %></p>
         <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <% if Profile.where(user: current_user).exists? %>
             <%#= cl_image_tag(current_user.profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
