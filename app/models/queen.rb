@@ -25,12 +25,45 @@ class Queen < Piece
   def valid_moves(board_state)
     valid_moves = []
 
-    bishop = Bishop.new(color)
-    rook = Rook.new(color)
+    # Calculate bishop-like moves
+    diagonals = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+    diagonals.each do |diagonal|
+      x, y = current_position
+      while true
+        x += diagonal[0]
+        y += diagonal[1]
+        break unless x.between?(0, 7) && y.between?(0, 7)
 
-    valid_moves += bishop.valid_moves(current_position, board_state)
-    valid_moves += rook.valid_moves(current_position, board_state)
+        if board_state[x][y].nil?
+          valid_moves << [x, y]
+        elsif board_state[x][y].color != color
+          valid_moves << [x, y]
+          break
+        else
+          break
+        end
+      end
+    end
 
-    return valid_moves
+    # Calculate rook-like moves
+    cardinals = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+    cardinals.each do |cardinal|
+      x, y = current_position
+      while true
+        x += cardinal[0]
+        y += cardinal[1]
+        break unless x.between?(0, 7) && y.between?(0, 7)
+
+        if board_state[x][y].nil?
+          valid_moves << [x, y]
+        elsif board_state[x][y].color != color
+          valid_moves << [x, y]
+          break
+        else
+          break
+        end
+      end
+    end
+    valid_moves
   end
 end

@@ -1,5 +1,5 @@
 class King < Piece
-  attr_accessor :current_position, :moved
+  attr_accessor :current_position, :moved, :checked
 
   def initialize(color, current_position)
     # Calls the superclass constructor

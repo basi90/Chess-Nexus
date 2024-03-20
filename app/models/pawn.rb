@@ -94,13 +94,13 @@ class Pawn < Piece
 
     case input
     when "Q"
-      board_state[new_position[0]][new_position[1]] = Queen.new(color)
+      board_state[new_position[0]][new_position[1]] = Queen.new(color, new_position)
     when "R"
-      board_state[new_position[0]][new_position[1]] = Rook.new(color)
+      board_state[new_position[0]][new_position[1]] = Rook.new(color, new_position)
     when "B"
-      board_state[new_position[0]][new_position[1]] = Bishop.new(color)
+      board_state[new_position[0]][new_position[1]] = Bishop.new(color, new_position)
     when "K"
-      board_state[new_position[0]][new_position[1]] = Knight.new(color)
+      board_state[new_position[0]][new_position[1]] = Knight.new(color, new_position)
     else
       puts "Invalid input. Please try again."
       promote(new_position, board_state)
