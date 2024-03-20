@@ -1,7 +1,3 @@
-<%# <div class="container text-center">
-  <h1 class="new-header">NEW GAME</h1>
-</div> %>
-
 <div class="game-container"
   data-controller="game-subscription"
   data-game-subscription-game-id-value="<%= @game.id %>">
@@ -9,7 +5,7 @@
 
     <div class="player-info">
       <%#= cl_image_tag(Profile.find(31).profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
-      <p class="new-header" data-game-subscription-target="opponent"><%= @game.black.present? ? @opponent : "Waiting for opponent..." %></p>
+      <p class="new-header" data-game-subscription-target="opponent"><%= @game.black.present? ? @opponent.profile.username : "Waiting for opponent..." %></p>
     </div>
 
     <div class="chessboard">
@@ -43,11 +39,20 @@
   </div>
 
   <div class="player-info">
-    <p class="new-header"><%= current_user.profile.username %>(You)</p>
-    <%#= cl_image_tag(@game.white.profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
+    <p class="new-header"><%#= current_user.profile.username %>You</p>
+    <%#= cl_image_tag(current_user.profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
   </div>
 
+</div>
+
+<div class="chat-container" data-controller="chat-modal">
   <div class="chat-icon">
-    <%= link_to '<i class="fa-regular fa-comment"></i>'.html_safe, game_chatroom_path(@game, @chatroom), class: "search-icon" %>
+    <%#= link_to '<i class="fa-regular fa-comment"></i>'.html_safe, game_chatroom_path(@game, @chatroom), class: "search-icon" %>
+    <button data-chat-modal-target="button" data-action="click->chat-modal#openChat"><i class="fa-regular fa-comment"></i></button>
   </div>
+
+  <div class="chat-modal d-none" data-chat-modal-target="popup">
+    <%= render partial: "chatroom", locals: { chatroom: @chatroom, message: @message, opponent: @opponent } %>
+  </div>
+
 </div>

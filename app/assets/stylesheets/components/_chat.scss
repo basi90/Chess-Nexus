@@ -1,4 +1,12 @@
+.chat-modal {
+  position: fixed;
+  top: 20vh;
+  left: 24px;
+  z-index: 1;
+}
+
 .chatroom {
+  background-color: white;
   margin-top: 9px;
   height: 60vh;
   width: 80vw;

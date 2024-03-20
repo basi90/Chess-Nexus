@@ -10,9 +10,7 @@ export default class extends Controller {
     this.channel = createConsumer().subscriptions.create(
       { channel: "ChatroomChannel", id: this.chatroomIdValue },
       { received: data => this.#insertMessageAndScrollDown(data) }
-
     )
-    console.log(`Subscribe to the chatroom with the id ${this.chatroomIdValue}.`)
   }
 
   #insertMessageAndScrollDown(data) {
@@ -56,7 +54,6 @@ export default class extends Controller {
   }
 
   disconnect() {
-    console.log("Unsubscribed from the chatroom")
     this.channel.unsubscribe()
   }
 }
