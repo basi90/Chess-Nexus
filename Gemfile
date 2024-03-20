@@ -32,6 +32,9 @@ gem "jbuilder"
 # Storing profile pictures
 gem "cloudinary"
 
+# Seeding db
+gem "faker"
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 

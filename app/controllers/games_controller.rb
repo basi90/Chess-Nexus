@@ -1,20 +1,14 @@
 class GamesController < ApplicationController
   def new
-    if Game.last.black_id.nil?
+    if Game.last.nil?
+      @game = Game.new(white: current_user)
+    elsif Game.last.black_id.nil?
       @game = Game.last
       @game.black = current_user
     else
       @game = Game.new(white: current_user)
     end
-
-    # if @game.black.present?
-    #   GameChannel.broadcast_to(
-    #   @game,
-    #   @game.black.profile.username
-    #   )
-    #   head :ok
-    # end
-
+    
     @chatroom = Chatroom.new
     @chatroom.game = @game
 
