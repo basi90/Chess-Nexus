@@ -2,16 +2,21 @@ class King < Piece
   attr_accessor :current_position, :moved
 
   def initialize(color, current_position)
+    # Calls the superclass constructor
     super(color, current_position)
     @checked = false
     @moved = false
   end
 
+  # Returns the unicode symbol for the piece
   def to_s
     color == :white ? "♚" : "♔"
   end
 
+  # Moves the piece to a new position, updating the board state
   def move_to(new_position, board_state)
+    return false unless valid_moves(board_state).include?(new_position)
+
     if can_castle?(new_position, board_state)
       do_castle(new_position, board_state)
     else
@@ -23,6 +28,7 @@ class King < Piece
     end
   end
 
+  # Returns an array of valid moves for the piece
   def valid_moves(board_state)
     valid_moves = []
 
@@ -41,6 +47,7 @@ class King < Piece
 
   private
 
+  # Determines if the king can perform castling to a specified new position
   def can_castle?(new_position, board_state)
     return false if @moved || @checked
 
@@ -55,6 +62,7 @@ class King < Piece
     rook && !rook.moved && path_clear
   end
 
+  # Calculates the potential moves available to the king if castling is an option
   def castle_moves(board_state)
     castling_moves = []
 
@@ -69,7 +77,7 @@ class King < Piece
     castling_moves
   end
 
-
+  # Executes the castling move by updating the positions of the king and the involved rook.
   def do_castle(new_position, board_state)
     rook_column = new_position[1] == 6 ? 7 : 0
     rook_new_column = new_position[1] == 6 ? 5 : 3

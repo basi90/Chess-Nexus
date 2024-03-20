@@ -1,16 +1,22 @@
 class Pawn < Piece
   attr_accessor :en_passant, :current_position
+
   def initialize(color, current_position)
+    # Calls the superclass constructor
     super(color, current_position)
     @moved = false
     @en_passant = false
   end
 
+  # Returns the unicode symbol for the piece
   def to_s
     color == :white ? "♟" : "♙"
   end
 
+  # Moves the piece to a new position, updating the board state
   def move_to(new_position, board_state)
+    return false unless valid_moves(board_state).include?(new_position)
+
     if (new_position[0] - current_position[0]).abs == 2
       @en_passant = true
     else
@@ -35,6 +41,7 @@ class Pawn < Piece
     end
   end
 
+  # Returns an array of valid moves for the piece
   def valid_moves(board_state)
     valid_moves = []
 
@@ -57,14 +64,17 @@ class Pawn < Piece
 
   private
 
+  # Checks if a given square is within the bounds of the board and empty
   def valid_square?(square, board_state)
     square[0].between?(0, 7) && square[1].between?(0, 7) && board_state[square[0]][square[1]].nil?
   end
 
+  # Checks if a capture move to a given square is legal for the pawn
   def valid_capture?(square, board_state)
     square[0].between?(0, 7) && square[1].between?(0, 7) && board_state[square[0]][square[1]] && board_state[square[0]][square[1]].color != color
   end
 
+  # Determines if an en passant capture is possible on a given square
   def en_passant_capture?(square, board_state)
     return false unless square[0].between?(0, 7) && square[1].between?(0, 7)
     return false unless board_state[current_position[0]] && board_state[current_position[0]][square[1]]
@@ -76,6 +86,7 @@ class Pawn < Piece
     true
   end
 
+  # Handles the promotion of a pawn when it reaches the opposite end of the board
   def promote(new_position, board_state)
     puts "Pawn promotion!"
     puts "promote to: Q, R, B, or K"
