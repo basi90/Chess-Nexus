@@ -10,7 +10,7 @@ export default class extends Controller {
     this.channel = createConsumer().subscriptions.create(
       { channel: "GameChannel", id: this.gameIdValue },
       // { received: data => console.log(`${data} has joined the game`) },
-      { received: data => this.opponentTarget.textContent = `${data} has joined the game` }
+      { received: data => this.opponentTarget.textContent = `${data}` }
     )
     // console.log(`Subscribe to the game with the id ${this.gameIdValue}.`)
   }

@@ -9,7 +9,7 @@
 
     <div class="player-info">
       <%#= cl_image_tag(Profile.find(31).profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
-      <p class="new-header" data-game-subscription-target="opponent"><%= @game.black.present? ? @game.black.profile.username : "Waiting for opponent..." %></p>
+      <p class="new-header" data-game-subscription-target="opponent"><%= @game.black.present? ? @opponent : "Waiting for opponent..." %></p>
     </div>
 
     <div class="chessboard">
@@ -43,7 +43,7 @@
   </div>
 
   <div class="player-info">
-    <p class="new-header"><%= @game.white.profile.username %></p>
+    <p class="new-header"><%= current_user.profile.username %>(You)</p>
     <%#= cl_image_tag(@game.white.profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
   </div>
 

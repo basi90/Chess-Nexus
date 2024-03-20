@@ -8,7 +8,7 @@ class GamesController < ApplicationController
     else
       @game = Game.new(white: current_user)
     end
-    
+
     @chatroom = Chatroom.new
     @chatroom.game = @game
 
@@ -21,6 +21,7 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
 
     if @game.black.present?
+      @opponent = @game.white == current_user ? @game.black.profile.username : @game.white.profile.username
       GameChannel.broadcast_to(
         @game,
         @game.black.profile.username
