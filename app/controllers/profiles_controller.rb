@@ -16,6 +16,11 @@ class ProfilesController < ApplicationController
     if Profile.where(user: current_user).exists?
       @friendships = Friendship.where(asker: current_user.profile)
     end
+
+    if @profile.user == current_user
+      @games = Game.where(white: current_user, finished: false).or(Game.where(black: current_user, finished: false))
+      @games.reject { |game| game.black.nil? }
+    end
   end
 
   def index

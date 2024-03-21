@@ -58,7 +58,7 @@
   <button class="quit-btn" data-quit-modal-target="button" data-action="click->quit-modal#toggleQuitMenu"><i class="fa-regular fa-circle-xmark"></i></button>
 
   <div class="quit-modal d-none" data-quit-modal-target="popup">
-    <%= render partial: "quit" %>
+    <%= render partial: "quit", locals: { game: @game } %>
     <button class="quit-close-btn" data-quit-modal-target="button" data-action="click->quit-modal#toggleQuitMenu"><i class="fa-regular fa-circle-xmark"></i></button>
   </div>
 </div>

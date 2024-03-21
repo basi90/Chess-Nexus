@@ -70,7 +70,7 @@
   // justify-content: space-between;
 }
 
-.friends-container {
+.friends-container, .games-container {
   margin: 48px auto;
   width: 80vw;
   text-align: center;
@@ -98,4 +98,10 @@
 .container-form {
   width: 60vw;
   margin: 0 auto;
+}
+.edit-icon {
+  font-size: 1rem;
+  opacity: 0.5;
+  text-align: center;
+  color: black
 }

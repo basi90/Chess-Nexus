@@ -31,4 +31,8 @@ class GamesController < ApplicationController
     @chatroom = @game.chatroom
     @chatroom.save
   end
+
+  def finished
+
+  end
 end
