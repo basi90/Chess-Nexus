@@ -46,13 +46,19 @@
 </div>
 
 <div class="chat-container" data-controller="chat-modal">
-  <div class="chat-icon">
-    <%#= link_to '<i class="fa-regular fa-comment"></i>'.html_safe, game_chatroom_path(@game, @chatroom), class: "search-icon" %>
-    <button data-chat-modal-target="button" data-action="click->chat-modal#openChat"><i class="fa-regular fa-comment"></i></button>
-  </div>
+    <button class="chat-popup-btn" data-chat-modal-target="button" data-action="click->chat-modal#openChat"><i class="fa-regular fa-comment"></i></button>
 
   <div class="chat-modal d-none" data-chat-modal-target="popup">
     <%= render partial: "chatroom", locals: { chatroom: @chatroom, message: @message, opponent: @opponent } %>
+    <button class="chat-close-btn" data-chat-modal-target="button" data-action="click->chat-modal#openChat"><i class="fa-regular fa-circle-xmark"></i></button>
   </div>
+</div>
 
+<div class="quit-container" data-controller="quit-modal">
+  <button class="quit-btn" data-quit-modal-target="button" data-action="click->quit-modal#toggleQuitMenu"><i class="fa-regular fa-circle-xmark"></i></button>
+
+  <div class="quit-modal d-none" data-quit-modal-target="popup">
+    <%= render partial: "quit" %>
+    <button class="quit-close-btn" data-quit-modal-target="button" data-action="click->quit-modal#toggleQuitMenu"><i class="fa-regular fa-circle-xmark"></i></button>
+  </div>
 </div>
