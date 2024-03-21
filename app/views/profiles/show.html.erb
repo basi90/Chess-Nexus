@@ -1,12 +1,12 @@
 
 <div class="profile-container">
   <div class="profile-top">
-    <%= cl_image_tag @profile.profile_picture.key, width: 200, height: 200, crop: "fill", class: "rounded-circle profile-img" %>
+    <%= cl_image_tag @profile.profile_picture.key, width: 160, height: 160, crop: "fill", class: "rounded-circle profile-img" %>
     <h1 class="new-header"><%= @profile.username.upcase %></h1>
     <p><%= @profile.bio %></p>
 
     <% if @profile.user == current_user %>
-      <%= link_to '<i class="fa-solid fa-user-pen"></i>'.html_safe, edit_user_registration_path, class: "edit-icon"%>
+      <%= link_to '<i class="fa-solid fa-user-pen"></i>'.html_safe, edit_user_registration_path, class: "edit-icon"%><br>
     <% end %>
 
     <div class="profile-stats">
@@ -18,50 +18,60 @@
 </div>
 
 
+
 <% if @profile.user == current_user %>
-
-
-  <div class="games-container">
-    <div class="">
-      <p class="new-header">CURRENT GAMES</p>
-      <% if @games.count == 0 %>
-        No ongoing games
-      <% end %>
-      <% @games.each do |game| %>
-      <div class="profile-item">
-        <% if game.black.nil? %>
-          <% opponent = "Waiting for opponent..." %>
-        <% else %>
-          <% current_user == game.white ? opponent = game.black.profile : opponent = game.white.profile %>
-          <%= link_to opponent.username, game_path(game), class: "new-header" %> <%= game.created_at.strftime('%b %e') %>
+  <div class="profile-bottom">
+    <div class="games-container">
+      <div class="">
+        <p class="friends-header profile-item">CURRENT GAMES</p>
+        <% if @games.count == 0 %>
+          No ongoing games
+        <% end %>
+        <% @games.each do |game| %>
+        <div class="profile-item">
+          <% if game.black.nil? %>
+            <% opponent = "Waiting for opponent..." %>
+          <% else %>
+            <% current_user == game.white ? opponent = game.black.profile : opponent = game.white.profile %>
+            <%= cl_image_tag(opponent.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
+            <%= link_to opponent.username, game_path(game), class: "friends-header" %> <%= game.created_at.strftime('%b %e') %>
+          <% end %>
+        </div>
         <% end %>
       </div>
-      <% end %>
-    </div>
-  </div>
+    <%# <div>
+      <p class="new-header">PREVIOUS GAMES</p>
+      No finished games yet
+    </div> %>
+    <%# </div> %>
 
-<% end %>
-
-
-<div class="friends-container">
-  <% if @profile.user != current_user && !Friendship.where(asker: current_user.profile, receiver: @profile).exists? %>
-    <%= link_to "FOLLOW", profile_friendships_path(@profile), data: {turbo_method: :post}, class: "add-friend-btn" %><br><br><br><br><br><br>
-    <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, url_for(:back) %>
-
-  <% elsif @profile.user != current_user && Friendship.where(asker: current_user.profile, receiver: @profile).exists? %>
-    <p class="following">FOLLOWING</p><br><br><br><br><br>
-    <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, url_for(:back) %>
-
-  <% elsif @profile.user == current_user && Friendship.where(asker: current_user.profile).exists? %>
-    <p class="new-header">FOLLOWING</p>
-
-    <% @friendships.each do |friendship| %>
-      <div class="profile-item">
-        <% if Profile.where(user_id: friendship.receiver.user_id).exists? %>
-          <%= cl_image_tag(friendship.receiver.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
-        <% end %>
-        <%= link_to friendship.receiver.username, profile_path(friendship.receiver), class: "new-header" %></h3>
-      </div>
     <% end %>
-  <% end %>
+
+
+  <div class="friends-container">
+    <% if @profile.user != current_user && !Friendship.where(asker: current_user.profile, receiver: @profile).exists? %>
+      <%= link_to "FOLLOW", profile_friendships_path(@profile), data: {turbo_method: :post}, class: "add-friend-btn" %><br><br><br><br><br><br>
+      <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, url_for(:back) %>
+
+    <% elsif @profile.user != current_user && Friendship.where(asker: current_user.profile, receiver: @profile).exists? %>
+      <p class="following">FOLLOWING</p><br><br><br><br><br>
+      <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, url_for(:back) %>
+
+    <% elsif @profile.user == current_user && Friendship.where(asker: current_user.profile).exists? %>
+      <p class="friends-header profile-item">FOLLOWING</p>
+
+      <% @friendships.each do |friendship| %>
+        <div class="profile-item">
+          <% if Profile.where(user_id: friendship.receiver.user_id).exists? %>
+            <%= cl_image_tag(friendship.receiver.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
+          <% end %>
+          <%= link_to friendship.receiver.username, profile_path(friendship.receiver), class: "friends-header" %></h3>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
 </div>
+
+    <% if @profile.user == current_user %>
+      <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "logout-btn" %>
+    <% end %>
