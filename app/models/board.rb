@@ -35,6 +35,7 @@ class Board
     setup_board
   end
 
+  # Move a piece from one position to another
   def move_piece(from, to)
     piece = self.board_state[from[0]][from[1]]
 
@@ -54,6 +55,7 @@ class Board
     update_king_checked_status
   end
 
+  # Display the current state of the board
   def display
     # Iterates over the board and prints it
     # Converts the internal representation into a chess board
@@ -71,20 +73,13 @@ class Board
     puts "  a b c d e f g h"
   end
 
-  # Determines if the king of the specified color is in check by checking if any
-  # of the opponent's pieces can move to the king's position
-  def king_in_check?(king_color)
-    king_pos = find_king(king_color)
-    opponent_pieces(king_color).any? do |piece|
-      piece.valid_moves.include?(king_pos)
-    end
-  end
-
+   # Check if a square on the board is valid (empty)
   def valid_square?(square)
     row, col = square
     row.between?(0, 7) && col.between?(0, 7) && @board_state[row][col].nil?
   end
 
+  # Check if a square on the board contains a piece that can be captured
   def valid_capture?(square, color)
     row, col = square
     return false unless row.between?(0, 7) && col.between?(0, 7)
@@ -92,6 +87,7 @@ class Board
     target_piece && target_piece.color != color
   end
 
+  # Check if an en passant capture is possible
   def en_passant_capture?(from, to)
     moving_piece = board_state[from[0]][from[1]]
     target_square = board_state[to[0]][to[1]]
@@ -138,6 +134,20 @@ class Board
     end
   end
 
+  # Returns an array of all pieces belonging to the opponent
+  def opponent_pieces(color)
+    @board_state.flatten.compact.select { |piece| piece.color != color }
+  end
+
+  # Determines if the king of the specified color is in check
+  def king_in_check?(king_color)
+    king_pos = find_king(king_color)
+    opponent_pieces(king_color).any? do |piece|
+      piece.valid_moves.include?(king_pos)
+    end
+  end
+
+  # Update the checked status of the kings on the board
   def update_king_checked_status
     [:white, :black].each do |color|
       king = find_king(color)
@@ -145,12 +155,7 @@ class Board
     end
   end
 
-  # Returns an array of all pieces belonging to the opponent
-  def opponent_pieces(color)
-    @board_state.flatten.compact.select { |piece| piece.color != color }
-  end
-
-  # Check if the king and rook involved in the castling have not moved
+  # Check if castling is possible
   def can_castle?(king_position)
     king = @board_state[king_position[0]][king_position[1]]
     king.is_a?(King) && !king.moved && !king.checked
@@ -173,6 +178,7 @@ class Board
     end
   end
 
+  # Execute castling move
   def execute_castling(king, from, to)
     direction = to[1] - from[1] > 0 ? 1 : -1
     rook_from_col = direction > 0 ? 7 : 0
@@ -195,6 +201,7 @@ class Board
     rook.moved = true
   end
 
+  # Simulate a move to check if it leaves the king in check
   def simulate_move(piece, from, to)
     original_position = piece.current_position.dup
     board_state[to[0]][to[1]] = piece
@@ -209,6 +216,7 @@ class Board
     board_state[to[0]][to[1]] = nil
   end
 
+  # Execute a move on the board
   def execute_move(piece, from, to)
     board_state[to[0]][to[1]] = piece
     board_state[from[0]][from[1]] = nil
@@ -232,6 +240,7 @@ class Board
     end
   end
 
+  # Reset en passant status for all pawns on the board
   def reset_en_passant_status
     board_state.each do |row|
       row.each do |square|
@@ -242,10 +251,12 @@ class Board
     end
   end
 
+  # Check if a pawn reaches the promotion zone
   def promotion?(piece, to)
     piece.is_a?(Pawn) && (to[0] == 0 || to[0] == 7)
   end
 
+  # Promote a pawn to another piece when it reaches the promotion zone
   def promote_pawn(position)
     pawn = board_state[position[0]][position[1]]
     raise "No pawn to promote at #{position}" unless pawn.is_a?(Pawn)
