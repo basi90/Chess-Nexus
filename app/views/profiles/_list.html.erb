@@ -1,0 +1,10 @@
+  <div class="friends-container">
+    <% @profiles.each do |profile| %>
+      <div class="profile-item">
+        <% if Profile.where(user_id: profile.user_id).exists? %>
+          <%= cl_image_tag(profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
+        <% end %>
+        <%= link_to profile.username.upcase, profile_path(profile), class: "new-header" %></h3>
+      </div>
+    <% end %>
+  </div>

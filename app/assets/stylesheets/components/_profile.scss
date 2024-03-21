@@ -62,6 +62,7 @@
   // border-radius: 24px 24px 0 0;
   max-width: 450px;
   margin: 0 auto;
+  background-color: rgb(246, 246, 246);
 }
 
 .friends-container, .games-container {
@@ -79,7 +80,7 @@
 .profile-item {
   width: 100%;
   margin: 16px auto;
-  border-bottom: 1px solid rgb(232, 232, 232);
+  border-bottom: 1px solid rgb(224, 224, 224);
   padding-bottom: 16px;
   transition: 0.4s ease;
 }

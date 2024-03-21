@@ -24,9 +24,11 @@ class ProfilesController < ApplicationController
   end
 
   def index
-    @profiles = Profile.all
-    if params[:query].present?
-      @profiles = @profiles.where("username ILIKE ?", "%#{params[:query]}%")
+    @profiles = Profile.where("username ILIKE ?", "%#{params[:query]}%")
+
+    respond_to do |format|
+      format.html # Follow regular flow of Rails
+      format.text { render partial: "profiles/list", locals: { profiles: @profiles }, formats: [:html] }
     end
   end
 
