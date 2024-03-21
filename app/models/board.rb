@@ -50,6 +50,12 @@ class Board
       simulate_move(piece, from, to) do
         raise InCheckError, "This move would leave the king in check." if king_in_check?(piece.color)
       end
+
+      target_piece = self.board_state[to[0]][to[1]]
+      if target_piece && target_piece.color != piece.color
+        capture_piece(to)
+      end
+
       execute_move(piece, from, to)
     end
     update_king_checked_status
@@ -123,6 +129,10 @@ class Board
     @board_state[7][7] = Rook.new(:white, [7, 7], self)
 
     @board_state[6].map!.with_index { |square, index| Pawn.new(:white, [6, index], self) }
+  end
+
+  def capture_piece(position)
+    self.board_state[position[0]][position[1]] = nil
   end
 
   # Finds and returns the position of the king of the specified color
@@ -273,5 +283,68 @@ class Board
       end
 
     board_state[position[0]][position[1]] = new_piece
+  end
+
+  # Check if a player has any legal moves
+  def has_legal_moves?(color)
+    @board_state.each_with_index do |row, row_idx|
+      row.each_with_index do |piece, col_idx|
+        next unless piece && piece.color == color
+
+        piece.valid_moves.each do |move|
+          # Simulate move to check if it's legal
+          return true if move_puts_king_out_of_check?(find_king(color), move, color)
+        end
+      end
+    end
+    false
+  end
+
+  # Check if a move puts the king out of check
+  def move_puts_king_out_of_check?(king_position, move, color)
+    piece = @board_state[king_position[0]][king_position[1]]
+    target_piece = @board_state[move[0]][move[1]]
+
+    simulate_move(piece, king_position, move) do
+      return true unless king_in_check?(color)
+    end
+    false
+  end
+
+  # Check if the game is in checkmate
+  def checkmate?(color)
+    return false unless king_in_check?(color)
+    !has_legal_moves?(color)
+  end
+
+  # Check if the game is in stalemate
+  def stalemate?(color)
+    !king_in_check?(color) && !has_legal_moves?(color)
+  end
+
+  # Check if the game is a draw due to threefold repetition
+  def draw_threefold_repetition?
+    @board_states.count(@board_state) == 3
+  end
+
+  # Check if the game is a draw due to insufficient material
+  def draw_insufficient_material?
+    pieces = @board_state.flatten.compact
+    kings = pieces.select { |piece| piece.is_a?(King) }
+    knights = pieces.select { |piece| piece.is_a?(Knight) }
+    bishops = pieces.select { |piece| piece.is_a?(Bishop) }
+
+    return true if pieces.length == kings.length
+
+    return true if kings.length == 1 && (knights.length == 1 || bishops.length == 1)
+
+    false
+  end
+
+  # Check if the game is over
+  def game_over?
+    checkmate?(:white) || checkmate?(:black) ||
+      stalemate?(:white) || stalemate?(:black) ||
+      draw_insufficient_material? || draw_threefold_repetition?
   end
 end
