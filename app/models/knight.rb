@@ -1,9 +1,8 @@
 class Knight < Piece
-  attr_accessor :current_position
 
-  def initialize(color, current_position)
+  def initialize(color, current_position, board)
     # Calls the superclass constructor
-    super(color, current_position)
+    super(color, current_position, board)
   end
 
   # Returns the unicode symbol for the piece
@@ -11,28 +10,23 @@ class Knight < Piece
     color == :white ?  "♞" : "♘"
   end
 
-  # Moves the piece to a new position, updating the board state
-  def move_to(new_position, board_state)
-    return false unless valid_moves(board_state).include?(new_position)
-
-    board_state[new_position[0]][new_position[1]] = self
-    board_state[current_position[0]][current_position[1]] = nil
-
-    @current_position = new_position
-  end
-
   # Returns an array of valid moves for the piece
-  def valid_moves(board_state)
+  def valid_moves
     valid_moves = []
 
     knight_moves = [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]]
 
     knight_moves.each do |move|
-      x = current_position[0] + move[0]
-      y = current_position[1] + move[1]
+      new_x = current_position[0] + move[0]
+      new_y = current_position[1] + move[1]
+      new_position = [new_x, new_y]
 
-      if x.between?(0, 7) && y.between?(0, 7) && (!board_state[x][y] || board_state[x][y].color != color)
-        valid_moves << [x, y]
+      # Check if the move is within board bounds
+      if new_x.between?(0, 7) && new_y.between?(0, 7)
+        # Check if the new position is either empty or contains an opponent's piece
+        if board.valid_square?(new_position) || board.valid_capture?(new_position, self.color)
+          valid_moves << new_position
+        end
       end
     end
     valid_moves
