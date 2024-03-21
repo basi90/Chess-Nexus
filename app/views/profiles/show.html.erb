@@ -5,15 +5,15 @@
     <h1 class="new-header"><%= @profile.username.upcase %></h1>
     <p><%= @profile.bio %></p>
 
-    <% if @profile.user == current_user %>
-      <%= link_to '<i class="fa-solid fa-user-pen"></i>'.html_safe, edit_user_registration_path, class: "edit-icon"%><br>
-    <% end %>
 
     <div class="profile-stats">
       <div class="stats"><p>Wins</p><p><strong>12</strong></p></div>
       <div class="stats"><p>Losses</p><p><strong>8</strong></p></div>
       <div class="stats"><p>Draws</p><p><strong>2</strong></p></div>
     </div>
+    <% if @profile.user == current_user %>
+      <%= link_to '<i class="fa-solid fa-user-pen"></i>'.html_safe, edit_user_registration_path, class: "edit-icon"%><br>
+    <% end %>
   </div>
 </div>
 
