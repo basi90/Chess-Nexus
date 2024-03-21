@@ -1,26 +1,22 @@
-<div class="search-container">
+<div class="search-container" data-controller="search-friends">
   <h2 class="text-center new-header">FIND A FRIEND</h2>
   <div class="row justify-content-center search-bar">
     <div class="col-sm-4 my-3">
-      <%= form_with url: profiles_path, method: :get, class: "d-flex" do %>
-        <%= text_field_tag :query,
+      <%= form_with url: profiles_path, method: :get, html: {class:"d-flex",
+      data: {search_friends_target: "form", action: "keyup->search-friends#update"}} do %>
+        <%= text_field :query,
               params[:query],
               class: "form-control",
-              placeholder: "Username"
+              placeholder: "Username",
+              value: params[:query],
+              data: {search_friends_target: "input"}
           %>
-        <%= submit_tag "Search", name: "", class: "search-btn" %>
+        <%#= submit_tag "Search", name: "", class: "search-btn" %>
       <% end %>
     </div>
   </div>
-  <div class="friends-container">
-    <% @profiles.each do |profile| %>
-      <div class="profile-item">
-        <% if Profile.where(user_id: profile.user_id).exists? %>
-          <%= cl_image_tag(profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
-        <% end %>
-        <%= link_to profile.username.upcase, profile_path(profile), class: "new-header" %></h3>
-      </div>
-    <% end %>
+  <div data-search-friends-target="list">
+    <%= render partial: "list" %>
   </div>
 
 </div>
