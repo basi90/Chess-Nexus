@@ -24,6 +24,30 @@ class King < Piece
         valid_moves << [x, y]
       end
     end
+    valid_moves.concat(castle_moves) if can_castle?
     valid_moves
+  end
+
+  private
+
+  def castle_moves
+    castle_moves = []
+    # Assuming 'board' is the instance variable or method accessing the Board object
+    if can_castle?
+      # Check kingside castling
+      if board.rook_has_not_moved?(current_position, 1) && board.castling_path_clear?(current_position, 1)
+        castle_moves << [current_position[0], current_position[1] + 2] # Kingside
+      end
+      # Check queenside castling
+      if board.rook_has_not_moved?(current_position, -1) && board.castling_path_clear?(current_position, -1)
+        castle_moves << [current_position[0], current_position[1] - 2] # Queenside
+      end
+    end
+
+    castle_moves
+  end
+
+  def can_castle?
+    !moved && !checked
   end
 end

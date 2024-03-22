@@ -31,6 +31,8 @@ class Board
   def initialize
     # Initializes an 8x8 board with nil values
     @board_state = Array.new(8) { Array.new(8) {nil} }
+    @current_turn = :white
+    @moves = ""
     # Calls a method to place chess pieces in their starting positions
     setup_board
   end
@@ -38,17 +40,21 @@ class Board
   # Move a piece from one position to another
   def move_piece(from, to)
     piece = self.board_state[from[0]][from[1]]
+    puts "Attempting to move #{piece} from #{from} to #{to}"
 
-    raise InvalidPieceError, "No piece at the given 'from' position." if piece.nil?
+    raise "No piece at the given 'from' position." if piece.nil?
+
+    raise "It's not your turn" unless piece.color == @current_turn
+
     unless piece.valid_moves.include?(to)
-      raise InvalidDestinationError, "The move is not valid for the selected piece."
+      raise "The move is not valid for the selected piece."
     end
 
     if piece.is_a?(King) && (to[1] - from[1]).abs == 2
-      execute_castling(from, to)
+      execute_castling(piece, from, to)
     else
       simulate_move(piece, from, to) do
-        raise InCheckError, "This move would leave the king in check." if king_in_check?(piece.color)
+        raise "This move would leave the king in check." if king_in_check?(piece.color)
       end
 
       target_piece = self.board_state[to[0]][to[1]]
@@ -58,7 +64,32 @@ class Board
 
       execute_move(piece, from, to)
     end
+
+    if piece.is_a?(Pawn)
+      # Mark the pawn as having moved
+      piece.moved = true
+
+      # Set en_passant flag if the pawn moves two squares vertically
+      if (from[0] - to[0]).abs == 2
+        piece.en_passant = true
+        puts "En Passant set to true for #{piece.color} pawn at #{to.inspect}"
+      end
+
+      # Execute en passant capture if applicable
+      perform_en_passant_capture(from, to) if en_passant_capture?(from, to)
+
+
+      if promotion?(piece, to)
+        promote_pawn(to)
+      end
+    end
+
     update_king_checked_status
+
+    reset_en_passant_status_except(piece)
+
+    toggle_turn
+    true
   end
 
   # Display the current state of the board
@@ -85,7 +116,6 @@ class Board
     row.between?(0, 7) && col.between?(0, 7) && @board_state[row][col].nil?
   end
 
-  # Check if a square on the board contains a piece that can be captured
   def valid_capture?(square, color)
     row, col = square
     return false unless row.between?(0, 7) && col.between?(0, 7)
@@ -93,15 +123,37 @@ class Board
     target_piece && target_piece.color != color
   end
 
-  # Check if an en passant capture is possible
+
+  # Check if a square on the board contains a piece that can be captured
   def en_passant_capture?(from, to)
     moving_piece = board_state[from[0]][from[1]]
-    target_square = board_state[to[0]][to[1]]
+    return false unless moving_piece.is_a?(Pawn)
 
-    return false unless moving_piece.is_a?(Pawn) && target_square.nil?
+    # En passant occurs during a diagonal move to an empty square
+    target_square_empty = board_state[to[0]][to[1]].nil?
+    diagonal_move = (from[1] - to[1]).abs == 1 && (from[0] - to[0]).abs == 1
 
-    adjacent_square = board_state[from[0]][to[1]]
-    adjacent_square.is_a?(Pawn) && adjacent_square.en_passant
+    captured_pawn_position = [from[0], to[1]] # Position of the pawn being captured
+    captured_pawn = board_state[captured_pawn_position[0]][captured_pawn_position[1]]
+
+    return target_square_empty && diagonal_move && captured_pawn&.is_a?(Pawn) && captured_pawn.en_passant
+  end
+
+   # Checks if the rook involved in the castling has not moved
+   def rook_has_not_moved?(king_position, direction)
+    row = king_position[0]
+    col = direction > 0 ? 7 : 0 # Rook's column based on castling direction
+    rook = @board_state[row][col]
+    rook.is_a?(Rook) && !rook.moved
+  end
+
+  # Checks if the path between the king and the rook is clear
+  def castling_path_clear?(king_position, direction)
+    row, col = king_position
+    steps = direction > 0 ? 2 : 3
+    (1..steps).all? do |step|
+      @board_state[row][col + step * direction].nil?
+    end
   end
 
   private
@@ -129,6 +181,11 @@ class Board
     @board_state[7][7] = Rook.new(:white, [7, 7], self)
 
     @board_state[6].map!.with_index { |square, index| Pawn.new(:white, [6, index], self) }
+  end
+
+  # Changes the turn to the opposite player
+  def toggle_turn
+    @current_turn = @current_turn == :white ? :black : :white
   end
 
   def capture_piece(position)
@@ -165,29 +222,6 @@ class Board
     end
   end
 
-  # Check if castling is possible
-  def can_castle?(king_position)
-    king = @board_state[king_position[0]][king_position[1]]
-    king.is_a?(King) && !king.moved && !king.checked
-  end
-
-  # Checks if the rook involved in the castling has not moved
-  def rook_has_not_moved?(king_position, direction)
-    row = king_position[0]
-    col = direction > 0 ? 7 : 0 # Rook's column based on castling direction
-    rook = @board_state[row][col]
-    rook.is_a?(Rook) && !rook.moved
-  end
-
-  # Checks if the path between the king and the rook is clear
-  def castling_path_clear?(king_position, direction)
-    row, col = king_position
-    steps = direction > 0 ? 2 : 3
-    (1..steps).all? do |step|
-      @board_state[row][col + step * direction].nil?
-    end
-  end
-
   # Execute castling move
   def execute_castling(king, from, to)
     direction = to[1] - from[1] > 0 ? 1 : -1
@@ -213,17 +247,23 @@ class Board
 
   # Simulate a move to check if it leaves the king in check
   def simulate_move(piece, from, to)
+    # Remember the original positions and piece at the target location, if any
     original_position = piece.current_position.dup
-    board_state[to[0]][to[1]] = piece
-    board_state[from[0]][from[1]] = nil
+    target_piece = @board_state[to[0]][to[1]]
+
+    # Make the move
+    @board_state[to[0]][to[1]] = piece
+    @board_state[from[0]][from[1]] = nil
     piece.current_position = to
 
-    yield
+    result = yield # Execute the block to determine the validity of the move
 
     # Revert the move
+    @board_state[from[0]][from[1]] = piece
+    @board_state[to[0]][to[1]] = target_piece
     piece.current_position = original_position
-    board_state[from[0]][from[1]] = piece
-    board_state[to[0]][to[1]] = nil
+
+    result
   end
 
   # Execute a move on the board
@@ -232,34 +272,58 @@ class Board
     board_state[from[0]][from[1]] = nil
     piece.current_position = to
 
-    reset_en_passant_status
-    if piece.is_a?(Pawn)
 
-      if (from[0] - to[0]).abs == 2
-        piece.en_passant = true
-      end
+    # if piece.is_a?(Pawn)
+    #   # Mark the pawn as having moved
+    #   piece.moved = true
 
-      if en_passant_capture?(from, to)
-        captured_pawn_position = [from[0], to[1]]
-        board_state[captured_pawn_position[0]][captured_pawn_position[1]] = nil
-      end
+    #   # Set en_passant flag if the pawn moves two squares vertically
+    #   if (from[0] - to[0]).abs == 2
+    #     piece.en_passant = true
+    #     puts "En Passant set to true for #{piece.color} pawn at #{to.inspect}"
+    #   end
 
-      if promotion?(piece, to)
-        promote_pawn(to)
-      end
+    #   # Execute en passant capture if applicable
+    #   perform_en_passant_capture(from, to) if en_passant_capture?(from, to)
+
+
+    #   if promotion?(piece, to)
+    #     promote_pawn(to)
+    #   end
+    # end
+  #   reset_en_passant_status_except(piece)
+  end
+
+  def perform_en_passant_capture(from, to)
+    # The captured pawn's row is the same as the 'from' row, and its column is the 'to' column
+    captured_pawn_position = [from[0], to[1]]
+    moving_piece = board_state[from[0]][from[1]]
+    captured_pawn = board_state[captured_pawn_position[0]][captured_pawn_position[1]]
+    puts "Attempting en passant capture. Captured pawn position: #{captured_pawn_position.inspect}"
+
+    # Remove the captured pawn from the board
+    if captured_pawn.is_a?(Pawn) && captured_pawn.en_passant && captured_pawn.color != moving_piece.color
+      puts "En passant capture at #{captured_pawn_position.inspect}"
+      board_state[captured_pawn_position[0]][captured_pawn_position[1]] = nil
+    else
+      puts "No en passant capture possible at #{captured_pawn_position.inspect}"
     end
   end
 
+
   # Reset en passant status for all pawns on the board
-  def reset_en_passant_status
+  def reset_en_passant_status_except(moved_pawn)
     board_state.each do |row|
-      row.each do |square|
-        if square.is_a?(Pawn)
-          square.en_passant = false
+      row.each do |piece|
+        if piece.is_a?(Pawn) && piece != moved_pawn
+          piece.en_passant = false
         end
       end
     end
   end
+
+
+
 
   # Check if a pawn reaches the promotion zone
   def promotion?(piece, to)
@@ -287,17 +351,19 @@ class Board
 
   # Check if a player has any legal moves
   def has_legal_moves?(color)
-    @board_state.each_with_index do |row, row_idx|
-      row.each_with_index do |piece, col_idx|
-        next unless piece && piece.color == color
+    @board_state.flatten.compact.each do |piece|
+      # Skip pieces that do not match the given color
+      next unless piece.color == color
 
-        piece.valid_moves.each do |move|
-          # Simulate move to check if it's legal
-          return true if move_puts_king_out_of_check?(find_king(color), move, color)
+      # Check every potential move for the piece to see if it's legal
+      piece.valid_moves(@board_state).each do |move|
+        # Simulate the move to see if it would result in a legal position
+        if simulate_move(piece, piece.current_position, move) { !king_in_check?(color) }
+          return true # Found at least one legal move
         end
       end
     end
-    false
+    false # No legal moves found
   end
 
   # Check if a move puts the king out of check
@@ -330,14 +396,15 @@ class Board
   # Check if the game is a draw due to insufficient material
   def draw_insufficient_material?
     pieces = @board_state.flatten.compact
-    kings = pieces.select { |piece| piece.is_a?(King) }
-    knights = pieces.select { |piece| piece.is_a?(Knight) }
-    bishops = pieces.select { |piece| piece.is_a?(Bishop) }
+    # Filter by piece type
+    bishops = pieces.select { |p| p.is_a?(Bishop) }
+    knights = pieces.select { |p| p.is_a?(Knight) }
+    non_king_pieces = pieces.count { |p| !p.is_a?(King) }
 
-    return true if pieces.length == kings.length
-
-    return true if kings.length == 1 && (knights.length == 1 || bishops.length == 1)
-
+    # Draw scenarios
+    return true if non_king_pieces == 0 # Only kings left
+    return true if non_king_pieces == 1 && (bishops.count == 1 || knights.count == 1) # King and bishop or king and knight
+    return true if bishops.count == 2 && bishops.all? { |b| b.color == bishops.first.color } # Two bishops on the same color
     false
   end
 
