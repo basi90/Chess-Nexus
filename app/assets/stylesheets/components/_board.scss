@@ -1,3 +1,21 @@
+// body {
+//   background-color: black;
+// }
+
+.highlight-square {
+  background-color: rgb(155, 74, 74) !important;
+}
+
+.game-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background-color: rgb(0, 0, 0);
+}
+
 .board-container {
   height: 80vh;
   display: flex;
@@ -5,33 +23,58 @@
   justify-content: space-around;
 }
 
-.chessboard{
+.chessboard {
   margin: auto auto;
   width: 350px; height:350px;
-  border-style:solid;
+  border: solid white;
   font-size:20px; line-height:2.5;
   text-align:center;}
 
- .chessboard>div{height:12.5%;}
+.chessboard>div {
+  height:12.5%;
+}
 
- .chessboard>div>div{
+.chessboard>div>div {
   width:12.5%; height:100%;
   display:inline-block; vertical-align:top;
   font-size: 2rem;
 }
 
- .chessboard>div:nth-child(odd)>div:nth-child(even),
- .chessboard>div:nth-child(even)>div:nth-child(odd)
-  {background-color:black; color:white;}
+.chessboard>div:nth-child(odd)>div:nth-child(even),
+.chessboard>div:nth-child(even)>div:nth-child(odd) {
+  background-color:rgb(215, 215, 215);
+  color:rgb(0, 0, 0);
+}
 
- .chessboard>div:nth-child(1),.chessboard>div>div:nth-child(1)
-  {background-color:white; color:black; }
+.chessboard>div:nth-child(odd)>div:nth-child(odd),
+.chessboard>div:nth-child(even)>div:nth-child(even) {
+  background-color:rgb(255, 255, 255);
+}
+
+//  .chessboard>div:nth-child(1),.chessboard>div>div:nth-child(1)
+//   {background-color:white; color:rgb(56, 56, 56); }
+
+.chessboard img {
+  // z-index: 1;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: -21px;
+}
 
 .player-info {
   display: flex;
   margin: 50px auto;
   align-items: center;
   gap: 8px;
+}
+
+.player-header {
+  font-weight: 800;
+  color: white;
+  text-decoration: none;
+  margin: 0;
 }
 
 // .player-info:first-child {

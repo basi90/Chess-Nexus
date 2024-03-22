@@ -1,61 +1,64 @@
+<div class="game-bg"></div>
 <div class="game-container"
   data-controller="game-subscription"
   data-game-subscription-game-id-value="<%= @game.id %>">
   <div class="board-container">
 
     <div class="player-info">
-      <%#= cl_image_tag(Profile.find(31).profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
-      <p class="new-header" data-game-subscription-target="opponent"><%= @game.black.present? ? @opponent.profile.username : "Waiting for opponent..." %></p>
+      <%#= @game.black.present? ? cl_image_tag(@game.black.profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") : "" %>
+      <p class="player-header" data-game-subscription-target="opponent"><%= @game.black.present? ? @opponent.profile.username : "Waiting for opponent..." %></p>
     </div>
 
-    <div class="chessboard">
+    <div class="chessboard" data-controller="board-piece">
         <div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bR.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bN.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bB.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bK.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bQ.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bB.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bN.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bR.png") %></div>
         </div>
         <div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bP.png", class: "black-pawn") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/bP.png") %></div>
         </div>
         <div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div>
         </div>
         <div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div>
         </div>
         <div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div>
         </div>
         <div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div><div data-action="click->board-piece#movePiece"></div>
         </div>
         <div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wP.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wP.png") %></div>
         </div>
         <div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wR.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wN.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wB.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wQ.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wK.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wB.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wN.png") %></div><div data-action="click->board-piece#movePiece"><%= image_tag("pieces/wR.png") %></div>
         </div>
   </div>
 
   <div class="player-info">
-    <p class="new-header"><%#= current_user.profile.username %>You</p>
+    <p class="player-header"><%#= current_user.profile.username %>You</p>
     <%#= cl_image_tag(current_user.profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") %>
   </div>
 
 </div>
 
-<div class="chat-container" data-controller="chat-modal">
-    <button class="chat-popup-btn" data-chat-modal-target="button" data-action="click->chat-modal#openChat"><i class="fa-regular fa-comment"></i></button>
+<div class="bottom-btns">
+  <div class="chat-container" data-controller="chat-modal">
+      <button class="chat-popup-btn" data-chat-modal-target="button" data-action="click->chat-modal#openChat"><i class="fa-solid fa-comment"></i></button>
 
-  <div class="chat-modal d-none" data-chat-modal-target="popup">
-    <%= render partial: "chatroom", locals: { chatroom: @chatroom, message: @message, opponent: @opponent } %>
-    <button class="chat-close-btn" data-chat-modal-target="button" data-action="click->chat-modal#openChat"><i class="fa-regular fa-circle-xmark"></i></button>
+    <div class="chat-modal d-none" data-chat-modal-target="popup">
+      <%= render partial: "chatroom", locals: { chatroom: @chatroom, message: @message, opponent: @opponent } %>
+      <button class="chat-close-btn" data-chat-modal-target="button" data-action="click->chat-modal#openChat"><i class="fa-regular fa-circle-xmark"></i></button>
+    </div>
   </div>
-</div>
 
-<div class="quit-container" data-controller="quit-modal">
-  <button class="quit-btn" data-quit-modal-target="button" data-action="click->quit-modal#toggleQuitMenu"><i class="fa-regular fa-circle-xmark"></i></button>
+  <div class="quit-container" data-controller="quit-modal">
+    <button class="quit-btn" data-quit-modal-target="button" data-action="click->quit-modal#toggleQuitMenu"><i class="fa-solid fa-circle-xmark"></i></button>
 
-  <div class="quit-modal d-none" data-quit-modal-target="popup">
-    <%= render partial: "quit", locals: { game: @game } %>
-    <button class="quit-close-btn" data-quit-modal-target="button" data-action="click->quit-modal#toggleQuitMenu"><i class="fa-regular fa-circle-xmark"></i></button>
+    <div class="quit-modal d-none" data-quit-modal-target="popup">
+      <%= render partial: "quit", locals: { game: @game } %>
+      <button class="quit-close-btn" data-quit-modal-target="button" data-action="click->quit-modal#toggleQuitMenu"><i class="fa-regular fa-circle-xmark"></i></button>
+    </div>
   </div>
 </div>

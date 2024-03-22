@@ -2,6 +2,8 @@
   width: 75vw;
   margin: 0 auto;
   z-index: -1;
+  position: sticky;
+  top: 75px;
 }
 
 .profile-top {
@@ -59,10 +61,11 @@
 .profile-bottom {
   // background-color: rgb(0, 0, 0);
   // color: white !important;
-  // border-radius: 24px 24px 0 0;
+  border-radius: 24px 24px 0 0;
   max-width: 450px;
   margin: 0 auto;
   background-color: rgb(246, 246, 246);
+  // box-shadow: 0px 0px 20px rgba(0,0,0,0.1);
 }
 
 .friends-container, .games-container {
@@ -80,7 +83,8 @@
 .profile-item {
   width: 100%;
   margin: 16px auto;
-  border-bottom: 1px solid rgb(224, 224, 224);
+  margin-bottom: 0;
+  border-bottom: 1px solid rgb(215, 215, 215);
   padding-bottom: 16px;
   transition: 0.4s ease;
 }
@@ -102,7 +106,10 @@
   font-size: 1rem;
   opacity: 0.5;
   text-align: center;
-  color: black
+  color: black;
+  // position: relative;
+  // top: 70px;
+  // right: 24px;
 }
 
 .friends-header {
@@ -114,7 +121,10 @@
 
 .logout-btn {
   padding-bottom: 24px;
-  margin-left: 24px;
+  text-align: center;
+  width: 100vw;
+  margin: 0 auto;
+  margin-top: 24px;
   text-decoration: none !important;
   color: black;
 }
