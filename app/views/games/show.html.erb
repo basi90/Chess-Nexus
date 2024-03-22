@@ -6,7 +6,14 @@
 
     <div class="player-info">
       <%#= @game.black.present? ? cl_image_tag(@game.black.profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") : "" %>
-      <p class="player-header" data-game-subscription-target="opponent"><%= @game.black.present? ? @opponent.profile.username : "Waiting for opponent..." %></p>
+      <%# < class="player-header" data-game-subscription-target="opponent"><%= @game.black.present? ? @opponent.profile.username : "Waiting for opponent..." %>
+      <p class="player-header" data-game-subscription-target="opponent">
+        <%if @game.black.present? %>
+          <%= link_to @opponent.profile.username, profile_path(@opponent.profile), class: "player-header" %>
+        <% else %>
+          <%= "Waiting for opponent..." %>
+        <% end %>
+        </p>
     </div>
 
     <div class="chessboard" data-controller="board-piece">
