@@ -24,26 +24,22 @@
     <div class="games-container">
       <div class="">
         <p class="friends-header profile-item">CURRENT GAMES</p>
-        <% if @games.count == 0 %>
-          No ongoing games
-        <% end %>
-        <% @games.each do |game| %>
-        <div class="profile-item">
-          <% if game.black.nil? %>
-            <% opponent = "Waiting for opponent..." %>
-          <% else %>
-            <% current_user == game.white ? opponent = game.black.profile : opponent = game.white.profile %>
-            <%= cl_image_tag(opponent.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
-            <%= link_to opponent.username, game_path(game), class: "friends-header" %> <%= game.created_at.strftime('%b %e') %>
+          <% if @games.count == 0 %>
+            No ongoing games
           <% end %>
-        </div>
+        <% @games.each do |game| %>
+          <div class="profile-item">
+            <% if game.black.nil? %>
+              <% opponent = "Waiting for opponent..." %>
+            <% else %>
+              <% current_user == game.white ? opponent = game.black.profile : opponent = game.white.profile %>
+              <%= cl_image_tag(opponent.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle") %>
+              <%= link_to opponent.username, game_path(game), class: "friends-header" %> <%= game.created_at.strftime('%b %e') %>
+            <% end %>
+          </div>
         <% end %>
       </div>
-    <%# <div>
-      <p class="new-header">PREVIOUS GAMES</p>
-      No finished games yet
-    </div> %>
-    <%# </div> %>
+    </div>
 
     <% end %>
 
@@ -72,6 +68,8 @@
   </div>
 </div>
 
-    <% if @profile.user == current_user %>
-      <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "logout-btn" %>
-    <% end %>
+<% if @profile.user == current_user %>
+  <div class="logout-btn">
+    <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "logout-btn" %>
+  </div>
+<% end %>

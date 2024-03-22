@@ -1,8 +1,18 @@
+// .bottom-btns {
+//   display: flex;
+//   justify-content: space-between;
+// }
+
 .quit-btn, .quit-close-btn {
   background-color: rgba(0, 0, 0, 0);
+  color: white;
   border: none;
   font-size: 2rem;
-  margin: 0px auto;
+  // margin: 12px;
+  // margin-top: 38px;
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
 }
 
 .quit-close-btn{
@@ -11,7 +21,7 @@
 
 .quit-modal {
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.8);
   width: 100vw;
   height: 100vh;
   top: 0;
