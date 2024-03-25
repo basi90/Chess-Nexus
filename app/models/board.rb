@@ -34,7 +34,7 @@ class Board < ApplicationRecord
 
   def start
     # Initializes an 8x8 board with nil values
-    @board_state = Array.new(8) { Array.new(8) {nil} }
+    self.board_state = Array.new(8) { Array.new(8) {nil} }
     self.next_to_move = "white"
     @moves = ""
     # Calls a method to place chess pieces in their starting positions
@@ -102,7 +102,7 @@ class Board < ApplicationRecord
   def display
     # Iterates over the board and prints it
     # Converts the internal representation into a chess board
-    @board_state.each_with_index do |row, row_index|
+    self.board_state.each_with_index do |row, row_index|
       print "#{8 - row_index} "
       row.each do |square|
         if square.nil?
@@ -119,13 +119,13 @@ class Board < ApplicationRecord
    # Check if a square on the board is valid (empty)
   def valid_square?(square)
     row, col = square
-    row.between?(0, 7) && col.between?(0, 7) && @board_state[row][col].nil?
+    row.between?(0, 7) && col.between?(0, 7) && self.board_state[row][col].nil?
   end
 
   def valid_capture?(square, color)
     row, col = square
     return false unless row.between?(0, 7) && col.between?(0, 7)
-    target_piece = @board_state[row][col]
+    target_piece = self.board_state[row][col]
     target_piece && target_piece.color != color
   end
 
@@ -149,7 +149,7 @@ class Board < ApplicationRecord
    def rook_has_not_moved?(king_position, direction)
     row = king_position[0]
     col = direction > 0 ? 7 : 0 # Rook's column based on castling direction
-    rook = @board_state[row][col]
+    rook = self.board_state[row][col]
     rook.is_a?(Rook) && !rook.moved
   end
 
@@ -158,7 +158,7 @@ class Board < ApplicationRecord
     row, col = king_position
     steps = direction > 0 ? 2 : 3
     (1..steps).all? do |step|
-      @board_state[row][col + step * direction].nil?
+      self.board_state[row][col + step * direction].nil?
     end
   end
 
@@ -166,27 +166,27 @@ class Board < ApplicationRecord
 
   # Places all pieces in their initial positions on the board
   def setup_board
-    @board_state[0][0] = Rook.new("black", [0, 0], self)
-    @board_state[0][1] = Knight.new("black", [0, 1], self)
-    @board_state[0][2] = Bishop.new("black", [0, 2], self)
-    @board_state[0][3] = Queen.new("black", [0, 3], self)
-    @board_state[0][4] = King.new("black", [0, 4], self)
-    @board_state[0][5] = Bishop.new("black", [0, 5], self)
-    @board_state[0][6] = Knight.new("black", [0, 6], self)
-    @board_state[0][7] = Rook.new("black", [0, 7], self)
+    self.board_state[0][0] = Rook.new("black", [0, 0], self)
+    self.board_state[0][1] = Knight.new("black", [0, 1], self)
+    self.board_state[0][2] = Bishop.new("black", [0, 2], self)
+    self.board_state[0][3] = Queen.new("black", [0, 3], self)
+    self.board_state[0][4] = King.new("black", [0, 4], self)
+    self.board_state[0][5] = Bishop.new("black", [0, 5], self)
+    self.board_state[0][6] = Knight.new("black", [0, 6], self)
+    self.board_state[0][7] = Rook.new("black", [0, 7], self)
 
-    @board_state[1].map!.with_index { |square, index| Pawn.new("black", [1, index], self) }
+    self.board_state[1].map!.with_index { |square, index| Pawn.new("black", [1, index], self) }
 
-    @board_state[7][0] = Rook.new("white", [7, 0], self)
-    @board_state[7][1] = Knight.new("white", [7, 1], self)
-    @board_state[7][2] = Bishop.new("white", [7, 2], self)
-    @board_state[7][3] = Queen.new("white", [7, 3], self)
-    @board_state[7][4] = King.new("white", [7, 4], self)
-    @board_state[7][5] = Bishop.new("white", [7, 5], self)
-    @board_state[7][6] = Knight.new("white", [7, 6], self)
-    @board_state[7][7] = Rook.new("white", [7, 7], self)
+    self.board_state[7][0] = Rook.new("white", [7, 0], self)
+    self.board_state[7][1] = Knight.new("white", [7, 1], self)
+    self.board_state[7][2] = Bishop.new("white", [7, 2], self)
+    self.board_state[7][3] = Queen.new("white", [7, 3], self)
+    self.board_state[7][4] = King.new("white", [7, 4], self)
+    self.board_state[7][5] = Bishop.new("white", [7, 5], self)
+    self.board_state[7][6] = Knight.new("white", [7, 6], self)
+    self.board_state[7][7] = Rook.new("white", [7, 7], self)
 
-    @board_state[6].map!.with_index { |square, index| Pawn.new("white", [6, index], self) }
+    self.board_state[6].map!.with_index { |square, index| Pawn.new("white", [6, index], self) }
   end
 
   # Changes the turn to the opposite player
@@ -200,7 +200,7 @@ class Board < ApplicationRecord
 
   # Finds and returns the position of the king of the specified color
   def find_king(color)
-    @board_state.each_with_index do |row, row_idx|
+    self.board_state.each_with_index do |row, row_idx|
       row.each_with_index do |piece, col_idx|
         return [row_idx, col_idx] if piece.is_a?(King) && piece.color == color
       end
@@ -209,7 +209,7 @@ class Board < ApplicationRecord
 
   # Returns an array of all pieces belonging to the opponent
   def opponent_pieces(color)
-    @board_state.flatten.compact.select { |piece| piece.color != color }
+    self.board_state.flatten.compact.select { |piece| piece.color != color }
   end
 
   # Determines if the king of the specified color is in check
@@ -236,17 +236,17 @@ class Board < ApplicationRecord
 
     rook_from = [from[0], rook_from_col]
     rook_to = [from[0], rook_to_col]
-    rook = @board_state[rook_from[0]][rook_from[1]]
+    rook = self.board_state[rook_from[0]][rook_from[1]]
 
     # Move king
-    @board_state[to[0]][to[1]] = king
-    @board_state[from[0]][from[1]] = nil
+    self.board_state[to[0]][to[1]] = king
+    self.board_state[from[0]][from[1]] = nil
     king.current_position = to
     king.moved = true
 
     # Move rook
-    @board_state[rook_to[0]][rook_to[1]] = rook
-    @board_state[rook_from[0]][rook_from[1]] = nil
+    self.board_state[rook_to[0]][rook_to[1]] = rook
+    self.board_state[rook_from[0]][rook_from[1]] = nil
     rook.current_position = rook_to
     rook.moved = true
   end
@@ -255,18 +255,18 @@ class Board < ApplicationRecord
   def simulate_move(piece, from, to)
     # Remember the original positions and piece at the target location, if any
     original_position = piece.current_position.dup
-    target_piece = @board_state[to[0]][to[1]]
+    target_piece = self.board_state[to[0]][to[1]]
 
     # Make the move
-    @board_state[to[0]][to[1]] = piece
-    @board_state[from[0]][from[1]] = nil
+    self.board_state[to[0]][to[1]] = piece
+    self.board_state[from[0]][from[1]] = nil
     piece.current_position = to
 
     result = yield # Execute the block to determine the validity of the move
 
     # Revert the move
-    @board_state[from[0]][from[1]] = piece
-    @board_state[to[0]][to[1]] = target_piece
+    self.board_state[from[0]][from[1]] = piece
+    self.board_state[to[0]][to[1]] = target_piece
     piece.current_position = original_position
 
     result
@@ -357,12 +357,12 @@ class Board < ApplicationRecord
 
   # Check if a player has any legal moves
   def has_legal_moves?(color)
-    @board_state.flatten.compact.each do |piece|
+    self.board_state.flatten.compact.each do |piece|
       # Skip pieces that do not match the given color
       next unless piece.color == color
 
       # Check every potential move for the piece to see if it's legal
-      piece.valid_moves(@board_state).each do |move|
+      piece.valid_moves(self.board_state).each do |move|
         # Simulate the move to see if it would result in a legal position
         if simulate_move(piece, piece.current_position, move) { !king_in_check?(color) }
           return true # Found at least one legal move
@@ -374,8 +374,8 @@ class Board < ApplicationRecord
 
   # Check if a move puts the king out of check
   def move_puts_king_out_of_check?(king_position, move, color)
-    piece = @board_state[king_position[0]][king_position[1]]
-    target_piece = @board_state[move[0]][move[1]]
+    piece = self.board_state[king_position[0]][king_position[1]]
+    target_piece = self.board_state[move[0]][move[1]]
 
     simulate_move(piece, king_position, move) do
       return true unless king_in_check?(color)
@@ -396,12 +396,12 @@ class Board < ApplicationRecord
 
   # Check if the game is a draw due to threefold repetition
   def draw_threefold_repetition?
-    @board_states.count(@board_state) == 3
+    self.board_states.count(self.board_state) == 3
   end
 
   # Check if the game is a draw due to insufficient material
   def draw_insufficient_material?
-    pieces = @board_state.flatten.compact
+    pieces = self.board_state.flatten.compact
     # Filter by piece type
     bishops = pieces.select { |p| p.is_a?(Bishop) }
     knights = pieces.select { |p| p.is_a?(Knight) }
