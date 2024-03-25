@@ -9,12 +9,12 @@ class Rook < Piece
 
   # Returns the unicode symbol for the piece
   def to_s
-    color == :white ?  "♜" : "♖"
+    color == "white" ?  "♜" : "♖"
   end
 
   # Returns an array of valid moves for the piece
   def to_s
-    color == :white ? "♜" : "♖"
+    color == "white" ? "♜" : "♖"
   end
 
   # Returns an array of valid moves for the piece
