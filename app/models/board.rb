@@ -2,8 +2,6 @@ class Board < ApplicationRecord
 
   belongs_to :game
 
-  serialize :board_state, JSON
-
   after_initialize :start
 
   # SQUARES = {
@@ -37,24 +35,12 @@ class Board < ApplicationRecord
   def start
     # Initializes an 8x8 board with nil values
     @board_state = Array.new(8) { Array.new(8) {nil} }
-    @next_to_move = :white
+    self.next_to_move = "white"
     @moves = ""
     # Calls a method to place chess pieces in their starting positions
     setup_board
     true
   end
-
-  # Returns the current state of the board
-  def board_state
-    self.state
-  end
-
-  # Sets the current state of the board
-  def board_state=(new_state)
-    self.state = new_state
-  end
-
-
 
   # Move a piece from one position to another
   def move_piece(from, to)
@@ -63,9 +49,10 @@ class Board < ApplicationRecord
 
     raise "No piece at the given 'from' position." if piece.nil?
 
-    raise "It's not your turn" unless piece.color == @next_to_move
+    raise "It's not your turn" unless piece.color == next_to_move
 
     unless piece.valid_moves.include?(to)
+      binding.b
       raise "The move is not valid for the selected piece."
     end
 
@@ -106,8 +93,6 @@ class Board < ApplicationRecord
     update_king_checked_status
 
     reset_en_passant_status_except(piece)
-
-    self.board_state = @board_state
 
     toggle_turn
     true
@@ -181,32 +166,32 @@ class Board < ApplicationRecord
 
   # Places all pieces in their initial positions on the board
   def setup_board
-    @board_state[0][0] = Rook.new(:black, [0, 0], self)
-    @board_state[0][1] = Knight.new(:black, [0, 1], self)
-    @board_state[0][2] = Bishop.new(:black, [0, 2], self)
-    @board_state[0][3] = Queen.new(:black, [0, 3], self)
-    @board_state[0][4] = King.new(:black, [0, 4], self)
-    @board_state[0][5] = Bishop.new(:black, [0, 5], self)
-    @board_state[0][6] = Knight.new(:black, [0, 6], self)
-    @board_state[0][7] = Rook.new(:black, [0, 7], self)
+    @board_state[0][0] = Rook.new("black", [0, 0], self)
+    @board_state[0][1] = Knight.new("black", [0, 1], self)
+    @board_state[0][2] = Bishop.new("black", [0, 2], self)
+    @board_state[0][3] = Queen.new("black", [0, 3], self)
+    @board_state[0][4] = King.new("black", [0, 4], self)
+    @board_state[0][5] = Bishop.new("black", [0, 5], self)
+    @board_state[0][6] = Knight.new("black", [0, 6], self)
+    @board_state[0][7] = Rook.new("black", [0, 7], self)
 
-    @board_state[1].map!.with_index { |square, index| Pawn.new(:black, [1, index], self) }
+    @board_state[1].map!.with_index { |square, index| Pawn.new("black", [1, index], self) }
 
-    @board_state[7][0] = Rook.new(:white, [7, 0], self)
-    @board_state[7][1] = Knight.new(:white, [7, 1], self)
-    @board_state[7][2] = Bishop.new(:white, [7, 2], self)
-    @board_state[7][3] = Queen.new(:white, [7, 3], self)
-    @board_state[7][4] = King.new(:white, [7, 4], self)
-    @board_state[7][5] = Bishop.new(:white, [7, 5], self)
-    @board_state[7][6] = Knight.new(:white, [7, 6], self)
-    @board_state[7][7] = Rook.new(:white, [7, 7], self)
+    @board_state[7][0] = Rook.new("white", [7, 0], self)
+    @board_state[7][1] = Knight.new("white", [7, 1], self)
+    @board_state[7][2] = Bishop.new("white", [7, 2], self)
+    @board_state[7][3] = Queen.new("white", [7, 3], self)
+    @board_state[7][4] = King.new("white", [7, 4], self)
+    @board_state[7][5] = Bishop.new("white", [7, 5], self)
+    @board_state[7][6] = Knight.new("white", [7, 6], self)
+    @board_state[7][7] = Rook.new("white", [7, 7], self)
 
-    @board_state[6].map!.with_index { |square, index| Pawn.new(:white, [6, index], self) }
+    @board_state[6].map!.with_index { |square, index| Pawn.new("white", [6, index], self) }
   end
 
   # Changes the turn to the opposite player
   def toggle_turn
-    @next_to_move = @next_to_move == :white ? :black : :white
+    self.next_to_move = next_to_move == "white" ? "black" : "white"
   end
 
   def capture_piece(position)
@@ -237,7 +222,7 @@ class Board < ApplicationRecord
 
   # Update the checked status of the kings on the board
   def update_king_checked_status
-    [:white, :black].each do |color|
+    ["white", "black"].each do |color|
       king = find_king(color)
       board_state[king[0]][king[1]].checked = king_in_check?(color) if king
     end
@@ -431,8 +416,8 @@ class Board < ApplicationRecord
 
   # Check if the game is over
   def game_over?
-    checkmate?(:white) || checkmate?(:black) ||
-      stalemate?(:white) || stalemate?(:black) ||
+    checkmate?("white") || checkmate?("black") ||
+      stalemate?("white") || stalemate?("black") ||
       draw_insufficient_material? || draw_threefold_repetition?
   end
 end
