@@ -37,6 +37,11 @@ class GamesController < ApplicationController
     @chatroom.save
   end
 
+  def update_board
+    raise
+    render json: { body: params }
+  end
+
   def finished
 
   end

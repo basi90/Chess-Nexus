@@ -1,4 +1,4 @@
-<div class="chessboard" data-controller="board-piece">
+<div class="chessboard" data-controller="board-piece" data-board-piece-game-id-value="<%= @game.id %>" >
         <div data-row="0">
             <div data-column="0" data-action="click->board-piece#movePiece"><%= image_tag("pieces/bR.png") %></div><div data-column="1" data-action="click->board-piece#movePiece"><%= image_tag("pieces/bN.png") %></div><div data-column="2" data-action="click->board-piece#movePiece"><%= image_tag("pieces/bB.png") %></div><div data-column="3" data-action="click->board-piece#movePiece"><%= image_tag("pieces/bK.png") %></div><div data-column="4" data-action="click->board-piece#movePiece"><%= image_tag("pieces/bQ.png") %></div><div data-column="5"data-action="click->board-piece#movePiece"><%= image_tag("pieces/bB.png") %></div><div data-column="6" data-action="click->board-piece#movePiece"><%= image_tag("pieces/bN.png") %></div><div data-column="7" data-action="click->board-piece#movePiece"><%= image_tag("pieces/bR.png") %></div>
         </div>
