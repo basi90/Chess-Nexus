@@ -1,4 +1,8 @@
-class Board
+class Board < ApplicationRecord
+
+  belongs_to :game
+
+  after_initialize :start
 
   # SQUARES = {
   #   a8: [0, 0], b8: [0, 1], c8: [0, 2], d8: [0, 3],
@@ -28,13 +32,14 @@ class Board
 
   attr_accessor :board_state
 
-  def initialize
+  def start
     # Initializes an 8x8 board with nil values
     @board_state = Array.new(8) { Array.new(8) {nil} }
-    @current_turn = :white
+    @next_to_move = :white
     @moves = ""
     # Calls a method to place chess pieces in their starting positions
     setup_board
+    true
   end
 
   # Move a piece from one position to another
@@ -44,7 +49,7 @@ class Board
 
     raise "No piece at the given 'from' position." if piece.nil?
 
-    raise "It's not your turn" unless piece.color == @current_turn
+    raise "It's not your turn" unless piece.color == @next_to_move
 
     unless piece.valid_moves.include?(to)
       raise "The move is not valid for the selected piece."
@@ -185,7 +190,7 @@ class Board
 
   # Changes the turn to the opposite player
   def toggle_turn
-    @current_turn = @current_turn == :white ? :black : :white
+    @next_to_move = @next_to_move == :white ? :black : :white
   end
 
   def capture_piece(position)
