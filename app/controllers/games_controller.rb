@@ -1,4 +1,6 @@
 class GamesController < ApplicationController
+  before_action :set_game, only: [:show, :update_board]
+
   def new
     if Game.last.nil?
       @game = Game.new(white: current_user)
@@ -14,6 +16,7 @@ class GamesController < ApplicationController
 
     @board = Board.new
     @board.game = @game
+    @board.save
 
     @game.save
 
@@ -21,8 +24,6 @@ class GamesController < ApplicationController
   end
 
   def show
-    @game = Game.find(params[:id])
-
     if @game.black.present?
       @opponent = @game.white == current_user ? @game.black : @game.white
       GameChannel.broadcast_to(
@@ -30,19 +31,28 @@ class GamesController < ApplicationController
         @game.black.profile.username
       )
     end
-    @board = @game.board
 
     @message = Message.new
     @chatroom = @game.chatroom
     @chatroom.save
+    raise
   end
 
   def update_board
-    raise
-    render json: { body: params }
+    @board_data = JSON.parse(request.body.read)
+    row = @board_data["row"].to_i
+    col = @board_data["column"].to_i
+    # binding.b
+    render json: { body: @board_data }
   end
 
   def finished
 
+  end
+
+  private
+
+  def set_game
+    @game = Game.find(params[:id])
   end
 end

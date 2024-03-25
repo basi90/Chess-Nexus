@@ -1,10 +1,9 @@
 class Board < ApplicationRecord
-
   belongs_to :game
 
-  serialize :board_state, JSON
+  # serialize :board_state, JSON
 
-  after_initialize :start
+  # after_initialize :start
 
   # SQUARES = {
   #   a8: [0, 0], b8: [0, 1], c8: [0, 2], d8: [0, 3],
@@ -36,22 +35,21 @@ class Board < ApplicationRecord
 
   def start
     # Initializes an 8x8 board with nil values
-    @board_state = Array.new(8) { Array.new(8) {nil} }
+    @board_state = Array.new(8) { Array.new(8) { nil } }
     @next_to_move = :white
     @moves = ""
     # Calls a method to place chess pieces in their starting positions
     setup_board
-    true
   end
 
   # Returns the current state of the board
-  def board_state
-    self.state
-  end
+  # def board_state
+  #   self.board_state
+  # end
 
   # Sets the current state of the board
   def board_state=(new_state)
-    self.state = new_state
+    self.board_state = new_state
   end
 
 

@@ -5,9 +5,6 @@ export default class extends Controller {
   static values = { gameId: Number }
 
   connect() {
-    console.log('hello');
-    console.log(this.gameIdValue);
-
   }
 
   movePiece(event) {
@@ -20,14 +17,10 @@ export default class extends Controller {
       event.currentTarget.classList.toggle("highlight-square");
     }
 
-    console.log(JSON.stringify({
-      row: row,
-      column: column
-    }))
-
     fetch(`/games/${this.gameIdValue}/update_board`, {
       method: 'POST',
-      headers: { "Accept": "application/json" },
+      headers: { "Accept": "application/json",
+      "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content},
       body: JSON.stringify({
         row: row,
         column: column
