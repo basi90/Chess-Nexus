@@ -1,8 +1,8 @@
 class Board < ApplicationRecord
-
   belongs_to :game
 
   after_initialize :start
+
 
   # SQUARES = {
   #   a8: [0, 0], b8: [0, 1], c8: [0, 2], d8: [0, 3],
@@ -34,12 +34,12 @@ class Board < ApplicationRecord
 
   def start
     # Initializes an 8x8 board with nil values
+
     self.board_state = Array.new(8) { Array.new(8) {nil} }
     self.next_to_move = "white"
     @moves = ""
     # Calls a method to place chess pieces in their starting positions
     setup_board
-    true
   end
 
   # Move a piece from one position to another

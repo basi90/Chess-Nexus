@@ -5,13 +5,14 @@ Rails.application.routes.draw do
     resources :friendships, only: [:create, :index]
   end
 
-  resources :games, only: [:new, :show, :update_board] do
+  resources :games, only: [:new, :show] do
+    member do
+      post :update_board
+    end
     resources :chatrooms, only: :show
   end
 
   resources :chatrooms, only: :show do
     resources :messages, only: :create
   end
-
-  post "update_board", to: "games#update_board"
 end
