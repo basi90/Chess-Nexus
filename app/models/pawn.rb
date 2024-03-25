@@ -10,14 +10,14 @@ class Pawn < Piece
 
   # Returns the unicode symbol for the piece
   def to_s
-    color == :white ? "♟" : "♙"
+    color == "white" ? "♟" : "♙"
   end
 
   # Returns an array of valid moves for the piece
   def valid_moves
     raise "Not a Board instance" unless board.is_a?(Board)
     valid_moves = []
-    direction = color == :white ? -1 : 1
+    direction = color == "white" ? -1 : 1
     one_step = [current_position[0] + direction, current_position[1]]
     two_steps = [current_position[0] + 2 * direction, current_position[1]]
     captures = [[current_position[0] + direction, current_position[1] - 1], [current_position[0] + direction, current_position[1] + 1]]
