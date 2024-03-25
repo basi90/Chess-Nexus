@@ -31,6 +31,8 @@ class GamesController < ApplicationController
         @game.black.profile.username
       )
     end
+    
+    @board = @game.board
 
     @message = Message.new
     @chatroom = @game.chatroom
