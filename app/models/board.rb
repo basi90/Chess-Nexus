@@ -2,6 +2,8 @@ class Board < ApplicationRecord
 
   belongs_to :game
 
+  serialize :board_state, JSON
+
   after_initialize :start
 
   # SQUARES = {
@@ -41,6 +43,18 @@ class Board < ApplicationRecord
     setup_board
     true
   end
+
+  # Returns the current state of the board
+  def board_state
+    self.state
+  end
+
+  # Sets the current state of the board
+  def board_state=(new_state)
+    self.state = new_state
+  end
+
+
 
   # Move a piece from one position to another
   def move_piece(from, to)
@@ -92,6 +106,8 @@ class Board < ApplicationRecord
     update_king_checked_status
 
     reset_en_passant_status_except(piece)
+
+    self.board_state = @board_state
 
     toggle_turn
     true
