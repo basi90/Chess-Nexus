@@ -12,6 +12,9 @@ class GamesController < ApplicationController
     @chatroom = Chatroom.new
     @chatroom.game = @game
 
+    @board = Board.new
+    @board.game = @game
+
     @game.save
 
     redirect_to game_path(@game)
@@ -27,6 +30,8 @@ class GamesController < ApplicationController
         @game.black.profile.username
       )
     end
+    @board = @game.board
+
     @message = Message.new
     @chatroom = @game.chatroom
     @chatroom.save

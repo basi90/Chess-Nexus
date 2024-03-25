@@ -7,6 +7,12 @@ export default class extends Controller {
   }
 
   movePiece(event) {
+    event.preventDefault();
+    let square = event.currentTarget;
+    let row = square.dataset.row
+    let column = square.parentElement.dataset.column
+    let pieceId = square.dataset.pieceId
+
     console.log(event.currentTarget.innerHTML);
     console.log(event.currentTarget.parentElement);
     if (event.currentTarget.innerHTML != "") {
