@@ -169,8 +169,20 @@ class Board < ApplicationRecord
   def initialize_piece_instance(piece_info_string) # "/{piece}/{color}/{position}{board_id}"
     return nil if piece_info_string.nil?
 
-    piece, color, pos, board_id = piece_info_string.split("/")
-    piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, Board.find(board_id.to_i))
+    piece_array = piece_info_string.split("/")
+    if piece_array[0] == "pawn"
+      piece, color, pos, board_id, moved, en_passant = piece_info_string.split("/")
+      piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, Board.find(board_id.to_i), moved, en_passant)
+    elsif piece_array[0] == "rook"
+      piece, color, pos, board_id, moved = piece_info_string.split("/")
+      piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, Board.find(board_id.to_i), moved)
+    elsif piece_array[0] == "king"
+      piece, color, pos, board_id, checked, moved = piece_info_string.split("/")
+      piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, Board.find(board_id.to_i), checked, moved)
+    else
+      piece, color, pos, board_id = piece_info_string.split("/")
+      piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, Board.find(board_id.to_i))
+    end
   end
 
   def check_board
@@ -183,7 +195,15 @@ class Board < ApplicationRecord
 
   def serialize_piece_instance(piece)
     return nil if piece.nil?
-    "#{piece.class.to_s.downcase}/#{piece.color}/#{piece.current_position.join(",")}/#{piece.board.id}"
+    if piece.class.to_s.downcase == "pawn"
+      "#{piece.class.to_s.downcase}/#{piece.color}/#{piece.current_position.join(",")}/#{piece.board.id}/#{piece.moved}/#{piece.en_passant}"
+    elsif piece.class.to_s.downcase == "rook"
+      "#{piece.class.to_s.downcase}/#{piece.color}/#{piece.current_position.join(",")}/#{piece.board.id}/#{piece.moved}"
+    elsif piece.class.to_s.downcase == "king"
+      "#{piece.class.to_s.downcase}/#{piece.color}/#{piece.current_position.join(",")}/#{piece.board.id}/#{piece.checked}/#{piece.moved}"
+    else
+      "#{piece.class.to_s.downcase}/#{piece.color}/#{piece.current_position.join(",")}/#{piece.board.id}"
+    end
   end
 
   def update_board(new_board_pieces)
@@ -192,7 +212,7 @@ class Board < ApplicationRecord
         serialize_piece_instance(col)
       end
     end
-  
+
     self.save
   end
 
@@ -200,27 +220,27 @@ class Board < ApplicationRecord
 
   # Places all pieces in their initial positions on the board
   def setup_board
-    self.board_state[0][0] = "rook/black/0,0/#{self.id}"
+    self.board_state[0][0] = "rook/black/0,0/#{self.id}/false"
     self.board_state[0][1] = "knight/black/0,1/#{self.id}"
     self.board_state[0][2] = "bishop/black/0,2/#{self.id}"
     self.board_state[0][3] = "queen/black/0,3/#{self.id}"
-    self.board_state[0][4] = "king/black/0,4/#{self.id}"
+    self.board_state[0][4] = "king/black/0,4/#{self.id}/false/false"
     self.board_state[0][5] = "bishop/black/0,5/#{self.id}"
     self.board_state[0][6] = "knight/black/0,6/#{self.id}"
-    self.board_state[0][7] = "rook/black/0,7/#{self.id}"
+    self.board_state[0][7] = "rook/black/0,7/#{self.id}/false"
 
-    self.board_state[1].map!.with_index { |square, index| "pawn/black/1,#{index}/#{self.id}" }
+    self.board_state[1].map!.with_index { |square, index| "pawn/black/1,#{index}/#{self.id}/false/false" }
 
-    self.board_state[7][0] = "rook/white/7,0/#{self.id}"
+    self.board_state[7][0] = "rook/white/7,0/#{self.id}/false"
     self.board_state[7][1] = "knight/white/7,1/#{self.id}"
     self.board_state[7][2] = "bishop/white/7,2/#{self.id}"
     self.board_state[7][3] = "queen/white/7,3/#{self.id}"
-    self.board_state[7][4] = "king/white/7,4/#{self.id}"
+    self.board_state[7][4] = "king/white/7,4/#{self.id}/false/false"
     self.board_state[7][5] = "bishop/white/7,5/#{self.id}"
     self.board_state[7][6] = "knight/white/7,6/#{self.id}"
-    self.board_state[7][7] = "rook/white/7,7/#{self.id}"
+    self.board_state[7][7] = "rook/white/7,7/#{self.id}/false"
 
-    self.board_state[6].map!.with_index { |square, index| "pawn/white/6,#{index}/#{self.id}" }
+    self.board_state[6].map!.with_index { |square, index| "pawn/white/6,#{index}/#{self.id}/false/false" }
   end
 
   # Changes the turn to the opposite player

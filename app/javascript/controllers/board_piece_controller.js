@@ -36,6 +36,8 @@ export default class extends Controller {
       document.querySelectorAll(".highlight-square").forEach(square => {square.classList.remove("highlight-square")})
 
     } else {
+      document.querySelectorAll(".highlight-square").forEach(square => {square.classList.remove("highlight-square")})
+
       const rowDiv = document.querySelector(`[data-row='${row}']`)
       const colDiv = rowDiv.querySelector(`[data-col='${col}']`)
       current_piece = square.innerHTML

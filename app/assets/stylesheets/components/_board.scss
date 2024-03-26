@@ -23,22 +23,55 @@
   justify-content: space-around;
 }
 
+// .chessboard {
+//   margin: auto auto;
+//   width: 350px; height:350px;
+//   border: solid white;
+//   font-size:20px; line-height:2.5;
+//   text-align:center;}
+
+// .chessboard>div {
+//   height:12.5%;
+// }
+
+// .chessboard>div>div {
+//   width:12.5%; height:100%;
+//   display:inline-block; vertical-align:top;
+//   font-size: 2rem;
+// }
+
 .chessboard {
   margin: auto auto;
-  width: 350px; height:350px;
-  border: solid white;
+  display: flex;
+  flex-direction: column;
+  width: 320px; /* Adjust based on your desired size */
+  border: 2px solid black;
   font-size:20px; line-height:2.5;
-  text-align:center;}
-
-.chessboard>div {
-  height:12.5%;
+  text-align:center;
 }
 
-.chessboard>div>div {
-  width:12.5%; height:100%;
-  display:inline-block; vertical-align:top;
-  font-size: 2rem;
+.chessboard > div {
+  display: flex;
 }
+
+.chessboard > div > div {
+  width: 40px; /* Adjust based on your desired size */
+  height: 40px; /* Adjust based on your desired size */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // border: 1px solid #ddd; /* Optional: adds a light border to each square */
+}
+
+// /* Optional: Different background colors for alternating squares */
+// .chessboard > div > div:nth-child(odd) {
+//   background-color: #f0d9b5; /* light square */
+// }
+
+// .chessboard > div:nth-child(odd) > div:nth-child(even),
+// .chessboard > div:nth-child(even) > div:nth-child(odd) {
+//   background-color: #b58863; /* dark square */
+// }
 
 .chessboard>div:nth-child(odd)>div:nth-child(even),
 .chessboard>div:nth-child(even)>div:nth-child(odd) {
@@ -60,7 +93,7 @@
   margin: 0;
   padding: 0;
   position: relative;
-  top: -21px;
+  // top: -21px;
 }
 
 .player-info {

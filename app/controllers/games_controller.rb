@@ -52,11 +52,13 @@ class GamesController < ApplicationController
 
     session[:current_piece] = [select_row, select_col]
 
-    valid_moves = @board.check_board[select_row][select_col].valid_moves
-
-    moves = {}
-    valid_moves.each_with_index do |move, index|
-      moves[index] = { row: move[0], col: move[1] }
+    piece = @board.check_board[select_row][select_col]
+    if piece.color == @board.next_to_move
+      valid_moves = @board.check_board[select_row][select_col].valid_moves
+      moves = {}
+      valid_moves.each_with_index do |move, index|
+        moves[index] = { row: move[0], col: move[1] }
+      end
     end
 
     render json: { body: moves }

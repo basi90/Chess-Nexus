@@ -1,10 +1,10 @@
 class Rook < Piece
   attr_accessor :moved
 
-  def initialize(color, current_position, board)
+  def initialize(color, current_position, board, moved)
     # Calls the superclass constructor
     super(color, current_position, board)
-    @moved = false
+    @moved = moved == "true"
   end
 
   # Returns the unicode symbol for the piece

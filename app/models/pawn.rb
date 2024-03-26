@@ -1,11 +1,11 @@
 class Pawn < Piece
   attr_accessor :en_passant, :moved
 
-  def initialize(color, current_position, board)
+  def initialize(color, current_position, board, moved, en_passant)
     # Calls the superclass constructor
     super(color, current_position, board)
-    @moved = false
-    @en_passant = false
+    @moved = moved == "true"
+    @en_passant = en_passant == "true"
   end
 
   # Returns the unicode symbol for the piece

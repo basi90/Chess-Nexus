@@ -16,7 +16,9 @@
         </p>
     </div>
 
-    <%= render partial: "board", locals: { game: @game } %>
+    <%= render partial: "board", locals: { game: @game, board: @board } %>
+
+
 
   <div class="player-info">
     <p class="player-header"><%#= current_user.profile.username %>You</p>

@@ -1,26 +1,14 @@
 <div class="chessboard" data-controller="board-piece" data-board-piece-game-id-value="<%= @game.id %>" >
-        <div data-row="0">
-            <div data-col="0" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bR.png") %></div><div data-col="1" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bN.png") %></div><div data-col="2" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bB.png") %></div><div data-col="3" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bQ.png") %></div><div data-col="4" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bK.png") %></div><div data-col="5"data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bB.png") %></div><div data-col="6" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bN.png") %></div><div data-col="7" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bR.png") %></div>
+  <% @board.board_state.each_with_index do |row, index| %>
+    <div data-row="<%= index %>">
+      <% row.each_with_index do |piece, index| %>
+        <div data-col="<%= index %>" data-action="click->board-piece#selectPiece">
+          <% if piece.present? %>
+            <% piece_array = piece.split("/") %>
+            <%= image_tag("pieces/#{piece_array[0]}#{piece_array[1]}.png") %>
+          <% end %>
         </div>
-        <div data-row="1">
-            <div data-col="0" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bP.png") %></div><div data-col="1" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bP.png") %></div><div data-col="2" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bP.png") %></div><div data-col="3" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bP.png") %></div><div data-col="4" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bP.png") %></div><div data-col="5"data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bP.png") %></div><div data-col="6" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bP.png") %></div><div data-col="7" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/bP.png") %></div>
-        </div>
-        <div data-row="2">
-            <div data-col="0" data-action="click->board-piece#selectPiece"></div><div data-col="1" data-action="click->board-piece#selectPiece"></div><div data-col="2" data-action="click->board-piece#selectPiece"></div><div data-col="3" data-action="click->board-piece#selectPiece"></div><div data-col="4" data-action="click->board-piece#selectPiece"></div><div data-col="5"data-action="click->board-piece#selectPiece"></div><div data-col="6" data-action="click->board-piece#selectPiece"></div><div data-col="7" data-action="click->board-piece#selectPiece"></div>
-        </div>
-        <div data-row="3">
-            <div data-col="0" data-action="click->board-piece#selectPiece"></div><div data-col="1" data-action="click->board-piece#selectPiece"></div><div data-col="2" data-action="click->board-piece#selectPiece"></div><div data-col="3" data-action="click->board-piece#selectPiece"></div><div data-col="4" data-action="click->board-piece#selectPiece"></div><div data-col="5"data-action="click->board-piece#selectPiece"></div><div data-col="6" data-action="click->board-piece#selectPiece"></div><div data-col="7" data-action="click->board-piece#selectPiece"></div>
-        </div>
-        <div data-row="4">
-            <div data-col="0" data-action="click->board-piece#selectPiece"></div><div data-col="1" data-action="click->board-piece#selectPiece"></div><div data-col="2" data-action="click->board-piece#selectPiece"></div><div data-col="3" data-action="click->board-piece#selectPiece"></div><div data-col="4" data-action="click->board-piece#selectPiece"></div><div data-col="5"data-action="click->board-piece#selectPiece"></div><div data-col="6" data-action="click->board-piece#selectPiece"></div><div data-col="7" data-action="click->board-piece#selectPiece"></div>
-        </div>
-        <div data-row="5">
-            <div data-col="0" data-action="click->board-piece#selectPiece"></div><div data-col="1" data-action="click->board-piece#selectPiece"></div><div data-col="2" data-action="click->board-piece#selectPiece"></div><div data-col="3" data-action="click->board-piece#selectPiece"></div><div data-col="4" data-action="click->board-piece#selectPiece"></div><div data-col="5"data-action="click->board-piece#selectPiece"></div><div data-col="6" data-action="click->board-piece#selectPiece"></div><div data-col="7" data-action="click->board-piece#selectPiece"></div>
-        </div>
-        <div data-row="6">
-            <div data-col="0" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wP.png") %></div><div data-col="1" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wP.png") %></div><div data-col="2" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wP.png") %></div><div data-col="3" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wP.png") %></div><div data-col="4" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wP.png") %></div><div data-col="5"data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wP.png") %></div><div data-col="6" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wP.png") %></div><div data-col="7" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wP.png") %></div>
-        </div>
-        <div data-row="7">
-            <div data-col="0" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wR.png") %></div><div data-col="1" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wN.png") %></div><div data-col="2" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wB.png") %></div><div data-col="3" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wQ.png") %></div><div data-col="4" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wK.png") %></div><div data-col="5"data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wB.png") %></div><div data-col="6" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wN.png") %></div><div data-col="7" data-action="click->board-piece#selectPiece"><%= image_tag("pieces/wR.png") %></div>
-        </div>
-  </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

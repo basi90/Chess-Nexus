@@ -1,11 +1,11 @@
 class King < Piece
   attr_accessor :moved, :checked
 
-  def initialize(color, current_position, board)
+  def initialize(color, current_position, board, checked, moved)
     # Calls the superclass constructor
     super(color, current_position, board)
-    @checked = false
-    @moved = false
+    @checked = checked == "true"
+    @moved = moved == "true"
   end
 
   # Returns the unicode symbol for the piece
