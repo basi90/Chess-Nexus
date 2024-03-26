@@ -31,9 +31,9 @@ class Rook < Piece
 
         break unless x.between?(0, 7) && y.between?(0, 7)
 
-        if board.board_state[x][y].nil?
+        if @board.check_board[x][y].nil?
           valid_moves << new_position
-        elsif board.board_state[x][y].color != color
+        elsif @board.check_board[x][y].color != color
           valid_moves << new_position
           break
         else

@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   resources :games, only: [:new, :show] do
     member do
-      post :update_board
+      post :select_piece, :select_move
     end
     resources :chatrooms, only: :show
   end

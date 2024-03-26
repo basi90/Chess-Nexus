@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  before_action :set_game, only: [:show, :update_board]
+  before_action :set_game, only: [:show, :select_piece, :select_move]
 
   def new
     if Game.last.nil?
@@ -14,11 +14,14 @@ class GamesController < ApplicationController
     @chatroom = Chatroom.new
     @chatroom.game = @game
 
+    @game.save
+
     @board = Board.new
     @board.game = @game
+    # binding.b
     @board.save
-
-    @game.save
+    @board.start
+    @board.save
 
     redirect_to game_path(@game)
   end
@@ -31,21 +34,47 @@ class GamesController < ApplicationController
         @game.black.profile.username
       )
     end
-    
+
     @board = @game.board
 
     @message = Message.new
     @chatroom = @game.chatroom
     @chatroom.save
-    raise
   end
 
-  def update_board
+  def select_piece
+    @board = @game.board
+
     @board_data = JSON.parse(request.body.read)
-    row = @board_data["row"].to_i
-    col = @board_data["column"].to_i
-    # binding.b
-    render json: { body: @board_data }
+
+    select_row = @board_data["row"].to_i
+    select_col = @board_data["col"].to_i
+
+    session[:current_piece] = [select_row, select_col]
+
+    valid_moves = @board.check_board[select_row][select_col].valid_moves
+
+    moves = {}
+    valid_moves.each_with_index do |move, index|
+      moves[index] = { row: move[0], col: move[1] }
+    end
+
+    render json: { body: moves }
+  end
+
+  def select_move
+    @board = @game.board
+
+    @board_data = JSON.parse(request.body.read)
+    session[:current_piece]
+
+    move_row = @board_data["row"].to_i
+    move_col = @board_data["col"].to_i
+
+    @board.move_piece(session[:current_piece], [move_row, move_col])
+    # render json: { success: true, board_state: @board.board_state}
+    # session[:board_state] = @board.board_state
+
   end
 
   def finished

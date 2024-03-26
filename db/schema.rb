@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_25_144743) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_26_091326) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -48,6 +48,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_25_144743) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "game_id", null: false
+    t.jsonb "board_state", default: [], array: true
     t.index ["game_id"], name: "index_boards_on_game_id"
   end
 

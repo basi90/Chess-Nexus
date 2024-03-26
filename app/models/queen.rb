@@ -28,7 +28,7 @@ class Queen < Piece
 
         if board.valid_square?(new_position)
           valid_moves << new_position
-        elsif board.valid_capture?(new_position, self.color)
+        elsif board.valid_capture?(new_position, self.color, @board.check_board)
           valid_moves << new_position
           break
         else

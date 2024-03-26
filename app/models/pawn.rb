@@ -30,7 +30,7 @@ class Pawn < Piece
 
     # Add captures, including en passant
     captures.each do |capture_pos|
-      if board.valid_capture?(capture_pos, color) || board.en_passant_capture?(current_position, capture_pos)
+      if board.valid_capture?(capture_pos, color, @board.check_board) || board.en_passant_capture?(current_position, capture_pos)
         valid_moves << capture_pos
       end
     end

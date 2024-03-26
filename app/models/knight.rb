@@ -24,7 +24,7 @@ class Knight < Piece
       # Check if the move is within board bounds
       if new_x.between?(0, 7) && new_y.between?(0, 7)
         # Check if the new position is either empty or contains an opponent's piece
-        if board.valid_square?(new_position) || board.valid_capture?(new_position, self.color)
+        if board.valid_square?(new_position) || board.valid_capture?(new_position, self.color, @board.check_board)
           valid_moves << new_position
         end
       end

@@ -1,8 +1,7 @@
 class Board < ApplicationRecord
   belongs_to :game
 
-  after_initialize :start
-
+  # before_create :start
 
   # SQUARES = {
   #   a8: [0, 0], b8: [0, 1], c8: [0, 2], d8: [0, 3],
@@ -30,11 +29,11 @@ class Board < ApplicationRecord
   #   e1:  [7, 4], f1: [7, 5], g1: [7, 6], h1: [7, 7]
   # }
 
-  attr_accessor :board_state
+  # attr_accessor :board_state
 
   def start
     # Initializes an 8x8 board with nil values
-
+    puts "start method running"
     self.board_state = Array.new(8) { Array.new(8) {nil} }
     self.next_to_move = "white"
     @moves = ""
@@ -44,7 +43,10 @@ class Board < ApplicationRecord
 
   # Move a piece from one position to another
   def move_piece(from, to)
-    piece = self.board_state[from[0]][from[1]]
+    board_pieces = check_board
+
+    piece = board_pieces[from[0]][from[1]]
+
     puts "Attempting to move #{piece} from #{from} to #{to}"
 
     raise "No piece at the given 'from' position." if piece.nil?
@@ -52,26 +54,26 @@ class Board < ApplicationRecord
     raise "It's not your turn" unless piece.color == next_to_move
 
     unless piece.valid_moves.include?(to)
-      binding.b
       raise "The move is not valid for the selected piece."
     end
 
     if piece.is_a?(King) && (to[1] - from[1]).abs == 2
       execute_castling(piece, from, to)
     else
-      simulate_move(piece, from, to) do
+      simulate_move(piece, from, to, board_pieces) do
         raise "This move would leave the king in check." if king_in_check?(piece.color)
       end
 
-      target_piece = self.board_state[to[0]][to[1]]
+      target_piece = board_pieces[to[0]][to[1]]
       if target_piece && target_piece.color != piece.color
         capture_piece(to)
       end
 
-      execute_move(piece, from, to)
+      new_board_pieces = execute_move(piece, from, to, board_pieces)
     end
 
     if piece.is_a?(Pawn)
+
       # Mark the pawn as having moved
       piece.moved = true
 
@@ -95,6 +97,8 @@ class Board < ApplicationRecord
     reset_en_passant_status_except(piece)
 
     toggle_turn
+    update_board(new_board_pieces)
+
     true
   end
 
@@ -122,10 +126,10 @@ class Board < ApplicationRecord
     row.between?(0, 7) && col.between?(0, 7) && self.board_state[row][col].nil?
   end
 
-  def valid_capture?(square, color)
+  def valid_capture?(square, color, board_pieces)
     row, col = square
     return false unless row.between?(0, 7) && col.between?(0, 7)
-    target_piece = self.board_state[row][col]
+    target_piece = board_pieces[row][col]
     target_piece && target_piece.color != color
   end
 
@@ -162,31 +166,61 @@ class Board < ApplicationRecord
     end
   end
 
+  def initialize_piece_instance(piece_info_string) # "/{piece}/{color}/{position}{board_id}"
+    return nil if piece_info_string.nil?
+
+    piece, color, pos, board_id = piece_info_string.split("/")
+    piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, Board.find(board_id.to_i))
+  end
+
+  def check_board
+    self.board_state.map do |row|
+      row.map do |col|
+        initialize_piece_instance(col)
+      end
+    end
+  end
+
+  def serialize_piece_instance(piece)
+    return nil if piece.nil?
+    "#{piece.class.to_s.downcase}/#{piece.color}/#{piece.current_position.join(",")}/#{piece.board.id}"
+  end
+
+  def update_board(new_board_pieces)
+    self.board_state = new_board_pieces.map do |row|
+      row.map do |col|
+        serialize_piece_instance(col)
+      end
+    end
+  
+    self.save
+  end
+
   private
 
   # Places all pieces in their initial positions on the board
   def setup_board
-    self.board_state[0][0] = Rook.new("black", [0, 0], self)
-    self.board_state[0][1] = Knight.new("black", [0, 1], self)
-    self.board_state[0][2] = Bishop.new("black", [0, 2], self)
-    self.board_state[0][3] = Queen.new("black", [0, 3], self)
-    self.board_state[0][4] = King.new("black", [0, 4], self)
-    self.board_state[0][5] = Bishop.new("black", [0, 5], self)
-    self.board_state[0][6] = Knight.new("black", [0, 6], self)
-    self.board_state[0][7] = Rook.new("black", [0, 7], self)
+    self.board_state[0][0] = "rook/black/0,0/#{self.id}"
+    self.board_state[0][1] = "knight/black/0,1/#{self.id}"
+    self.board_state[0][2] = "bishop/black/0,2/#{self.id}"
+    self.board_state[0][3] = "queen/black/0,3/#{self.id}"
+    self.board_state[0][4] = "king/black/0,4/#{self.id}"
+    self.board_state[0][5] = "bishop/black/0,5/#{self.id}"
+    self.board_state[0][6] = "knight/black/0,6/#{self.id}"
+    self.board_state[0][7] = "rook/black/0,7/#{self.id}"
 
-    self.board_state[1].map!.with_index { |square, index| Pawn.new("black", [1, index], self) }
+    self.board_state[1].map!.with_index { |square, index| "pawn/black/1,#{index}/#{self.id}" }
 
-    self.board_state[7][0] = Rook.new("white", [7, 0], self)
-    self.board_state[7][1] = Knight.new("white", [7, 1], self)
-    self.board_state[7][2] = Bishop.new("white", [7, 2], self)
-    self.board_state[7][3] = Queen.new("white", [7, 3], self)
-    self.board_state[7][4] = King.new("white", [7, 4], self)
-    self.board_state[7][5] = Bishop.new("white", [7, 5], self)
-    self.board_state[7][6] = Knight.new("white", [7, 6], self)
-    self.board_state[7][7] = Rook.new("white", [7, 7], self)
+    self.board_state[7][0] = "rook/white/7,0/#{self.id}"
+    self.board_state[7][1] = "knight/white/7,1/#{self.id}"
+    self.board_state[7][2] = "bishop/white/7,2/#{self.id}"
+    self.board_state[7][3] = "queen/white/7,3/#{self.id}"
+    self.board_state[7][4] = "king/white/7,4/#{self.id}"
+    self.board_state[7][5] = "bishop/white/7,5/#{self.id}"
+    self.board_state[7][6] = "knight/white/7,6/#{self.id}"
+    self.board_state[7][7] = "rook/white/7,7/#{self.id}"
 
-    self.board_state[6].map!.with_index { |square, index| Pawn.new("white", [6, index], self) }
+    self.board_state[6].map!.with_index { |square, index| "pawn/white/6,#{index}/#{self.id}" }
   end
 
   # Changes the turn to the opposite player
@@ -200,7 +234,7 @@ class Board < ApplicationRecord
 
   # Finds and returns the position of the king of the specified color
   def find_king(color)
-    self.board_state.each_with_index do |row, row_idx|
+    self.check_board.each_with_index do |row, row_idx|
       row.each_with_index do |piece, col_idx|
         return [row_idx, col_idx] if piece.is_a?(King) && piece.color == color
       end
@@ -209,7 +243,7 @@ class Board < ApplicationRecord
 
   # Returns an array of all pieces belonging to the opponent
   def opponent_pieces(color)
-    self.board_state.flatten.compact.select { |piece| piece.color != color }
+    self.check_board.flatten.compact.select { |piece| piece.color != color }
   end
 
   # Determines if the king of the specified color is in check
@@ -224,7 +258,7 @@ class Board < ApplicationRecord
   def update_king_checked_status
     ["white", "black"].each do |color|
       king = find_king(color)
-      board_state[king[0]][king[1]].checked = king_in_check?(color) if king
+      self.check_board[king[0]][king[1]].checked = king_in_check?(color) if king
     end
   end
 
@@ -252,32 +286,32 @@ class Board < ApplicationRecord
   end
 
   # Simulate a move to check if it leaves the king in check
-  def simulate_move(piece, from, to)
+  def simulate_move(piece, from, to, board_pieces)
     # Remember the original positions and piece at the target location, if any
     original_position = piece.current_position.dup
-    target_piece = self.board_state[to[0]][to[1]]
+    target_piece = board_pieces[to[0]][to[1]]
 
     # Make the move
-    self.board_state[to[0]][to[1]] = piece
-    self.board_state[from[0]][from[1]] = nil
+    board_pieces[to[0]][to[1]] = piece
+    board_pieces[from[0]][from[1]] = nil
     piece.current_position = to
 
     result = yield # Execute the block to determine the validity of the move
 
     # Revert the move
-    self.board_state[from[0]][from[1]] = piece
-    self.board_state[to[0]][to[1]] = target_piece
+    board_pieces[from[0]][from[1]] = piece
+    board_pieces[to[0]][to[1]] = target_piece
     piece.current_position = original_position
 
     result
   end
 
   # Execute a move on the board
-  def execute_move(piece, from, to)
-    board_state[to[0]][to[1]] = piece
-    board_state[from[0]][from[1]] = nil
+  def execute_move(piece, from, to, board_pieces)
+    board_pieces[to[0]][to[1]] = piece
+    board_pieces[from[0]][from[1]] = nil
     piece.current_position = to
-
+    return board_pieces
 
     # if piece.is_a?(Pawn)
     #   # Mark the pawn as having moved
@@ -356,13 +390,13 @@ class Board < ApplicationRecord
   end
 
   # Check if a player has any legal moves
-  def has_legal_moves?(color)
-    self.board_state.flatten.compact.each do |piece|
+  def has_legal_moves?(color, board_pieces)
+    board_pieces.flatten.compact.each do |piece|
       # Skip pieces that do not match the given color
       next unless piece.color == color
 
       # Check every potential move for the piece to see if it's legal
-      piece.valid_moves(self.board_state).each do |move|
+      piece.valid_moves.each do |move|
         # Simulate the move to see if it would result in a legal position
         if simulate_move(piece, piece.current_position, move) { !king_in_check?(color) }
           return true # Found at least one legal move
@@ -386,12 +420,12 @@ class Board < ApplicationRecord
   # Check if the game is in checkmate
   def checkmate?(color)
     return false unless king_in_check?(color)
-    !has_legal_moves?(color)
+    !has_legal_moves?(color, board_pieces)
   end
 
   # Check if the game is in stalemate
   def stalemate?(color)
-    !king_in_check?(color) && !has_legal_moves?(color)
+    !king_in_check?(color) && !has_legal_moves?(color, board_pieces)
   end
 
   # Check if the game is a draw due to threefold repetition

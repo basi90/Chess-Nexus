@@ -20,7 +20,7 @@ class King < Piece
     king_moves = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]
     king_moves.each do |move|
       x, y = current_position[0] + move[0], current_position[1] + move[1]
-      if x.between?(0, 7) && y.between?(0, 7) && (!board.board_state[x][y] || board.board_state[x][y].color != color)
+      if x.between?(0, 7) && y.between?(0, 7) && (!@board.check_board[x][y] || @board.check_board[x][y].color != color)
         valid_moves << [x, y]
       end
     end
