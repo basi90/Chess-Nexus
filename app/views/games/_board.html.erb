@@ -1,4 +1,6 @@
-<div class="chessboard" data-controller="board-piece" data-board-piece-game-id-value="<%= @game.id %>" >
+<div class="chessboard"
+  data-controller="board-piece"
+  data-board-piece-game-id-value="<%= @game.id %>" >
   <% @board.board_state.each_with_index do |row, index| %>
     <div data-row="<%= index %>">
       <% row.each_with_index do |piece, index| %>

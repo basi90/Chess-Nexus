@@ -16,8 +16,14 @@
         </p>
     </div>
 
-    <%= render partial: "board", locals: { game: @game, board: @board } %>
+    <div class="board-container"
+      data-controller="board-subscription"
+      data-board-subscription-board-id-value="<%= @board.id %>"
+      data-board-subscription-target="board" >
 
+      <%= render partial: "board", locals: { game: @game, board: @board } %>
+
+    </div>
 
 
   <div class="player-info">

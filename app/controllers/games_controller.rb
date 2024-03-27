@@ -74,9 +74,11 @@ class GamesController < ApplicationController
     move_col = @board_data["col"].to_i
 
     @board.move_piece(session[:current_piece], [move_row, move_col])
-    # render json: { success: true, board_state: @board.board_state}
-    # session[:board_state] = @board.board_state
 
+    BoardChannel.broadcast_to(
+      @board,
+      render_to_string(partial: "board", locals: { game: @game, board: @board }, formats: [ :html ] )
+    )
   end
 
   def finished
