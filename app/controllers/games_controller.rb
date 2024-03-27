@@ -4,6 +4,8 @@ class GamesController < ApplicationController
   def new
     if Game.last.nil?
       @game = Game.new(white: current_user)
+    elsif Game.last.white == current_user
+      @game = Game.last
     elsif Game.last.black_id.nil?
       @game = Game.last
       @game.black = current_user
@@ -18,7 +20,7 @@ class GamesController < ApplicationController
 
     @board = Board.new
     @board.game = @game
-    # binding.b
+
     @board.save
     @board.start
     @board.save
