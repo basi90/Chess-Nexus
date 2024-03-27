@@ -8,7 +8,8 @@ class MessagesController < ApplicationController
       ChatroomChannel.broadcast_to(
         @chatroom,
         message: render_to_string(partial: "message", locals: { message: @message }),
-        sender_id: @message.user.id
+        sender_id: @message.user.id,
+        picture_key: @message.user.profile.profile_picture.key
       )
       head :ok
     else

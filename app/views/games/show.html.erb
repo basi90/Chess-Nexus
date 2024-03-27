@@ -38,7 +38,7 @@
       <button class="chat-popup-btn" data-chat-modal-target="button" data-action="click->chat-modal#openChat"><i class="fa-solid fa-comment"></i></button>
 
     <div class="chat-modal d-none"
-      data-chat-modal-target="popup">
+      data-chat-modal-target="popup" >
       <%= render partial: "chatroom", locals: { chatroom: @chatroom, message: @message, opponent: @opponent, current_user: current_user } %>
       <button class="chat-close-btn" data-chat-modal-target="button" data-action="click->chat-modal#openChat"><i class="fa-regular fa-circle-xmark"></i></button>
     </div>

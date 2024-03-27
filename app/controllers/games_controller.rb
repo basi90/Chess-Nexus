@@ -4,7 +4,7 @@ class GamesController < ApplicationController
   def new
     if Game.last.nil?
       @game = Game.new(white: current_user)
-    elsif Game.last.white == current_user
+    elsif Game.last.white == current_user && Game.last.black.nil?
       @game = Game.last
     elsif Game.last.black_id.nil?
       @game = Game.last
@@ -29,13 +29,16 @@ class GamesController < ApplicationController
   end
 
   def show
+    @chatroom = @game.chatroom
+
     if @game.black.present?
       @opponent = @game.white == current_user ? @game.black : @game.white
       GameChannel.broadcast_to(
         @game,
-        @game.black.profile.username
+        @game.black.profile
       )
     end
+
 
     @board = @game.board
 
