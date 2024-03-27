@@ -7,8 +7,6 @@ export default class extends Controller {
   static targets = ["messages"]
 
   connect() {
-    console.log(this.currentUserPictureKeyValue);
-    console.log(this.opponentPictureKeyValue);
     this.channel = createConsumer().subscriptions.create(
       { channel: "ChatroomChannel", id: this.chatroomIdValue },
       { received: (data) => this.#insertMessageAndScrollDown(data) }

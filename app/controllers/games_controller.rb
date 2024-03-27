@@ -29,8 +29,6 @@ class GamesController < ApplicationController
   end
 
   def show
-    @chatroom = @game.chatroom
-
     if @game.black.present?
       @opponent = @game.white == current_user ? @game.black : @game.white
       GameChannel.broadcast_to(
@@ -38,7 +36,6 @@ class GamesController < ApplicationController
         @game.black.profile
       )
     end
-
 
     @board = @game.board
 
