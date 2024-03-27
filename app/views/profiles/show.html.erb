@@ -23,7 +23,7 @@
   <div class="profile-bottom">
     <div class="games-container">
       <div class="">
-        <p class="friends-header profile-item">CURRENT GAMES</p>
+        <p class="friends-header profile-item profile-header">CURRENT GAMES</p>
           <% if @games.count == 0 %>
             No ongoing games
           <% end %>
@@ -46,15 +46,19 @@
 
   <div class="friends-container">
     <% if @profile.user != current_user && !Friendship.where(asker: current_user.profile, receiver: @profile).exists? %>
-      <%= link_to "FOLLOW", profile_friendships_path(@profile), data: {turbo_method: :post}, class: "add-friend-btn" %><br><br><br><br><br><br>
-      <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, url_for(:back) %>
+      <div class="profie-item">
+        <%= link_to "FOLLOW", profile_friendships_path(@profile), data: {turbo_method: :post}, class: "add-friend-btn" %> <br>
+        <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, url_for(:back) %>
+      </div>
 
     <% elsif @profile.user != current_user && Friendship.where(asker: current_user.profile, receiver: @profile).exists? %>
-      <p class="following">FOLLOWING</p><br><br><br><br><br>
-      <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, url_for(:back) %>
+      <div class="profile-item">
+        <p class="following">FOLLOWING</p><br>
+        <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, url_for(:back) %>
+      </div>
 
     <% elsif @profile.user == current_user && Friendship.where(asker: current_user.profile).exists? %>
-      <p class="friends-header profile-item">FOLLOWING</p>
+      <p class="friends-header profile-item profile-header">FOLLOWING</p>
 
       <% @friendships.each do |friendship| %>
         <div class="profile-item">

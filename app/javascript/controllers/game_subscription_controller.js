@@ -9,7 +9,9 @@ export default class extends Controller {
   connect() {
     this.channel = createConsumer().subscriptions.create(
       { channel: "GameChannel", id: this.gameIdValue },
-      { received: data => this.opponentTarget.textContent = `${data}` }
+      { received: data => this.opponentTarget.textContent = `${data.username}`
+                  
+      }
     )
   }
 
