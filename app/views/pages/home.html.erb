@@ -3,7 +3,7 @@
   <div class="home-container">
     <div>
       <p class="home-welcome">WELCOME TO</p>
-      <h2><strong>CHESS BRO</strong></h2>
+      <h2><strong>CHESS NEXUS</strong></h2>
     </div>
     <% if user_signed_in? && Profile.where(user_id: current_user.id).exists? %>
       <div class="justify-content-center"><%= link_to "PLAY", new_game_path, class: "play-btn", data: { turbo: "false" } %></div>
