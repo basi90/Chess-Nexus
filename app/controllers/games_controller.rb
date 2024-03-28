@@ -4,6 +4,14 @@ class GamesController < ApplicationController
   def new
     if Game.last.nil?
       @game = Game.new(white: current_user)
+      @board = Board.new
+      @board.game = @game
+      @board.save
+      @board.start
+      @board.save
+
+      @chatroom = Chatroom.new
+      @chatroom.game = @game
     elsif Game.last.white == current_user && Game.last.black.nil?
       @game = Game.last
     elsif Game.last.black_id.nil?
@@ -11,19 +19,17 @@ class GamesController < ApplicationController
       @game.black = current_user
     else
       @game = Game.new(white: current_user)
+      @board = Board.new
+      @board.game = @game
+      @board.save
+      @board.start
+      @board.save
+
+      @chatroom = Chatroom.new
+      @chatroom.game = @game
     end
 
-    @chatroom = Chatroom.new
-    @chatroom.game = @game
-
     @game.save
-
-    @board = Board.new
-    @board.game = @game
-
-    @board.save
-    @board.start
-    @board.save
 
     redirect_to game_path(@game)
   end
