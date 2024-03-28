@@ -46,13 +46,13 @@
 
   <div class="friends-container">
     <% if @profile.user != current_user && !Friendship.where(asker: current_user.profile, receiver: @profile).exists? %>
-      <div class="profie-item">
+      <div class="friends-header profile-header">
         <%= link_to "FOLLOW", profile_friendships_path(@profile), data: {turbo_method: :post}, class: "add-friend-btn" %> <br>
         <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, url_for(:back) %>
       </div>
 
     <% elsif @profile.user != current_user && Friendship.where(asker: current_user.profile, receiver: @profile).exists? %>
-      <div class="profile-item">
+      <div class="friends-header profile-header">
         <p class="following">FOLLOWING</p><br>
         <%= link_to '<i class="fa-solid fa-arrow-left back-btn"></i>'.html_safe, url_for(:back) %>
       </div>
