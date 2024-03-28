@@ -166,29 +166,29 @@ class Board < ApplicationRecord
     end
   end
 
-  def initialize_piece_instance(piece_info_string) # "/{piece}/{color}/{position}{board_id}"
+  def initialize_piece_instance(piece_info_string, board)
     return nil if piece_info_string.nil?
 
     piece_array = piece_info_string.split("/")
     if piece_array[0] == "pawn"
       piece, color, pos, board_id, moved, en_passant = piece_info_string.split("/")
-      piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, Board.find(board_id.to_i), moved, en_passant)
+      piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, board, moved, en_passant)
     elsif piece_array[0] == "rook"
       piece, color, pos, board_id, moved = piece_info_string.split("/")
-      piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, Board.find(board_id.to_i), moved)
+      piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, board, moved)
     elsif piece_array[0] == "king"
       piece, color, pos, board_id, checked, moved = piece_info_string.split("/")
-      piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, Board.find(board_id.to_i), checked, moved)
+      piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, board, checked, moved)
     else
       piece, color, pos, board_id = piece_info_string.split("/")
-      piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, Board.find(board_id.to_i))
+      piece.capitalize.constantize.new(color, pos.split(",").map { |num| num.to_i}, board)
     end
   end
 
   def check_board
     self.board_state.map do |row|
       row.map do |col|
-        initialize_piece_instance(col)
+        initialize_piece_instance(col, self)
       end
     end
   end
