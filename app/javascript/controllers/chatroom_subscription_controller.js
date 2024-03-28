@@ -24,11 +24,9 @@ export default class extends Controller {
   #buildMessageElement(currentUserIsSender, message, pictureKey) {
     return `
       <div class="message-row d-flex ${this.#justifyClass(currentUserIsSender)}">
-        ${this.#showOpponentProfilePicture(currentUserIsSender, pictureKey)}
         <div class="${this.#userStyleClass(currentUserIsSender)}">
         ${message}
         </div>
-        ${this.#showCurrentUserProfilePicture(currentUserIsSender)}
       </div>
     `
   }
