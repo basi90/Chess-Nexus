@@ -25,5 +25,5 @@ Clone the repo and install dependencies:
 
 ```bash
 git clone https://github.com/basi90/Chess-Nexus.git
-cd rails-chess-app
+cd Chess-Nexus
 bundle install && yarn install
