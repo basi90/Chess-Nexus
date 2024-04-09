@@ -26,8 +26,8 @@ export default class extends Controller {
           col: col
         })
       })
-        .then(response => response.json())
-        .then(data => { board_state = data });
+        // .then(response => response.json())
+        // .then(data => { board_state = data });
 
       const rowDiv = document.querySelector(`[data-row='${row}']`)
       const colDiv = rowDiv.querySelector(`[data-col='${col}']`)
