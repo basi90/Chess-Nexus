@@ -5,9 +5,7 @@
   <div class="board-container">
 
     <div class="player-info">
-      <%#= @game.black.present? ? cl_image_tag(@game.black.profile.profile_picture.key, width: 40, height: 40, crop: "fill", class: "rounded-circle", alt: "dropdown menu") : "" %>
-      <%# < class="player-header" data-game-subscription-target="opponent"><%= @game.black.present? ? @opponent.profile.username : "Waiting for opponent..." %>
-      <p class="player-header" data-game-subscription-target="opponent">
+       <p class="player-header" data-game-subscription-target="opponent">
         <%if @game.black.present? %>
           <%= link_to @opponent.profile.username, profile_path(@opponent.profile), class: "player-header" %>
         <% else %>
@@ -19,9 +17,17 @@
     <div class="board-container"
       data-controller="board-subscription"
       data-board-subscription-board-id-value="<%= @board.id %>"
-      data-board-subscription-target="board" >
+      data-board-subscription-target="board"
+      data-board-subscription-current-user-id-value="<%= current_user.id %>"
+      data-board-subscription-white-user-id-value="<%= @game.white_id %>"
+      data-board-subscription-black-user-id-value="<%= @game.black_id %>"
+      data-board-subscription-board-state-value="<%= @board.board_state %>" >
 
+      <% if current_user.id == @game.white_id %>
         <%= render partial: "board", locals: { game: @game, board: @board } %>
+      <% else %>
+        <%= render partial: "boardblack", locals: { game: @game, board: @board } %>
+      <% end %>
 
     </div>
 
