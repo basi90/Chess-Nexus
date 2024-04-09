@@ -36,12 +36,12 @@ class GamesController < ApplicationController
 
   def show
     if @game.black.present?
-      @opponent = @game.white == current_user ? @game.black : @game.white
       GameChannel.broadcast_to(
         @game,
         @game.black.profile
       )
     end
+    @opponent = @game.white == current_user ? @game.black : @game.white
 
     @board = @game.board
 
@@ -85,12 +85,14 @@ class GamesController < ApplicationController
 
     BoardChannel.broadcast_to(
       @board,
-      render_to_string(partial: "board", locals: { game: @game, board: @board }, formats: [ :html ] )
+      board_white: render_to_string(partial: "board", locals: { game: @game, board: @board }, formats: [ :html ] ),
+      board_black: render_to_string(partial: "boardblack", locals: { game: @game, board: @board }, formats: [ :html ] ),
+      user: current_user
     )
   end
 
-  def finished
-
+  def game_over
+    @board.finished = true
   end
 
   private
