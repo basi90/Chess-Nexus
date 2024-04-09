@@ -91,8 +91,8 @@ class GamesController < ApplicationController
     )
   end
 
-  def finished
-
+  def game_over
+    @board.finished = true
   end
 
   private

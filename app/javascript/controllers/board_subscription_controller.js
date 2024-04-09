@@ -10,7 +10,6 @@ export default class extends Controller {
     this.channel = createConsumer().subscriptions.create(
       { channel: "BoardChannel", id: this.boardIdValue },
       { received: (data) => {
-        console.log(this.currentUserIdValue, this.whiteUserIdValue, this.blackUserIdValue);
         if (this.currentUserIdValue === this.whiteUserIdValue) {
           this.boardTarget.innerHTML = data.board_white
         } else if (this.currentUserIdValue === this.blackUserIdValue) {
