@@ -4,7 +4,7 @@
 
      <% @board.board_state.to_enum.with_index.reverse_each do |row, index| %>
       <div data-row="<%= index %>">
-        <% row.each_with_index do |piece, index| %>
+        <% row.to_enum.with_index.reverse_each do |piece, index| %>
           <div data-col="<%= index %>" data-action="click->board-piece#selectPiece">
             <% if piece.present? %>
               <% piece_array = piece.split("/") %>
