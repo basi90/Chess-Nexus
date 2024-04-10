@@ -60,9 +60,9 @@ class Board < ApplicationRecord
     if piece.is_a?(King) && (to[1] - from[1]).abs == 2
       execute_castling(piece, from, to)
     else
-      simulate_move(piece, from, to, board_pieces) do
-        raise "This move would leave the king in check." if king_in_check?(piece.color)
-      end
+      # simulate_move(piece, from, to, board_pieces) do
+      #   raise "This move would leave the king in check." if king_in_check?(piece.color, board_pieces)
+      # end
 
       target_piece = board_pieces[to[0]][to[1]]
       if target_piece && target_piece.color != piece.color
@@ -92,7 +92,7 @@ class Board < ApplicationRecord
       end
     end
 
-    update_king_checked_status
+    # update_king_checked_status(new_board_pieces)
 
     reset_en_passant_status_except(piece)
 
@@ -253,8 +253,8 @@ class Board < ApplicationRecord
   end
 
   # Finds and returns the position of the king of the specified color
-  def find_king(color)
-    self.check_board.each_with_index do |row, row_idx|
+  def find_king(color, board_pieces)
+    board_pieces.each_with_index do |row, row_idx|
       row.each_with_index do |piece, col_idx|
         return [row_idx, col_idx] if piece.is_a?(King) && piece.color == color
       end
@@ -262,23 +262,28 @@ class Board < ApplicationRecord
   end
 
   # Returns an array of all pieces belonging to the opponent
-  def opponent_pieces(color)
-    self.check_board.flatten.compact.select { |piece| piece.color != color }
+  def opponent_pieces(color, board_pieces)
+    board_pieces.flatten.compact.select { |piece| piece.color != color }
   end
 
   # Determines if the king of the specified color is in check
-  def king_in_check?(king_color)
-    king_pos = find_king(king_color)
-    opponent_pieces(king_color).any? do |piece|
+  def king_in_check?(king_color, board_pieces)
+    king_pos = find_king(king_color, board_pieces)
+    return false unless king_pos
+    opponent_pieces(king_color, board_pieces).any? do |piece|
       piece.valid_moves.include?(king_pos)
     end
   end
 
   # Update the checked status of the kings on the board
-  def update_king_checked_status
+  def update_king_checked_status(board_pieces)
     ["white", "black"].each do |color|
-      king = find_king(color)
-      self.check_board[king[0]][king[1]].checked = king_in_check?(color) if king
+      king_pos = find_king(color, board_pieces)
+      if king_pos
+        king_in_check = king_in_check?(color, board_pieces)
+        king = board_pieces[king_pos[0]][king_pos[1]]
+        king.checked = king_in_check if king.is_a?(King)
+      end
     end
   end
 
@@ -332,26 +337,6 @@ class Board < ApplicationRecord
     board_pieces[from[0]][from[1]] = nil
     piece.current_position = to
     return board_pieces
-
-    # if piece.is_a?(Pawn)
-    #   # Mark the pawn as having moved
-    #   piece.moved = true
-
-    #   # Set en_passant flag if the pawn moves two squares vertically
-    #   if (from[0] - to[0]).abs == 2
-    #     piece.en_passant = true
-    #     puts "En Passant set to true for #{piece.color} pawn at #{to.inspect}"
-    #   end
-
-    #   # Execute en passant capture if applicable
-    #   perform_en_passant_capture(from, to) if en_passant_capture?(from, to)
-
-
-    #   if promotion?(piece, to)
-    #     promote_pawn(to)
-    #   end
-    # end
-  #   reset_en_passant_status_except(piece)
   end
 
   def perform_en_passant_capture(from, to)
@@ -410,68 +395,68 @@ class Board < ApplicationRecord
   end
 
   # Check if a player has any legal moves
-  def has_legal_moves?(color, board_pieces)
-    board_pieces.flatten.compact.each do |piece|
-      # Skip pieces that do not match the given color
-      next unless piece.color == color
+  # def has_legal_moves?(color, board_pieces)
+  #   board_pieces.flatten.compact.each do |piece|
+  #     # Skip pieces that do not match the given color
+  #     next unless piece.color == color
 
-      # Check every potential move for the piece to see if it's legal
-      piece.valid_moves.each do |move|
-        # Simulate the move to see if it would result in a legal position
-        if simulate_move(piece, piece.current_position, move) { !king_in_check?(color) }
-          return true # Found at least one legal move
-        end
-      end
-    end
-    false # No legal moves found
-  end
+  #     # Check every potential move for the piece to see if it's legal
+  #     piece.valid_moves.each do |move|
+  #       # Simulate the move to see if it would result in a legal position
+  #       if simulate_move(piece, piece.current_position, move, board_pieces) { !king_in_check?(color, board_pieces) }
+  #         return true # Found at least one legal move
+  #       end
+  #     end
+  #   end
+  #   false # No legal moves found
+  # end
 
-  # Check if a move puts the king out of check
-  def move_puts_king_out_of_check?(king_position, move, color)
-    piece = self.board_state[king_position[0]][king_position[1]]
-    target_piece = self.board_state[move[0]][move[1]]
+  # # Check if a move puts the king out of check
+  # def move_puts_king_out_of_check?(king_position, move, color)
+  #   piece = self.board_state[king_position[0]][king_position[1]]
+  #   target_piece = self.board_state[move[0]][move[1]]
 
-    simulate_move(piece, king_position, move) do
-      return true unless king_in_check?(color)
-    end
-    false
-  end
+  #   simulate_move(piece, king_position, move) do
+  #     return true unless king_in_check?(color)
+  #   end
+  #   false
+  # end
 
-  # Check if the game is in checkmate
-  def checkmate?(color)
-    return false unless king_in_check?(color)
-    !has_legal_moves?(color, board_pieces)
-  end
+  # # Check if the game is in checkmate
+  # def checkmate?(color, board_pieces)
+  #   return false unless king_in_check?(color, board_pieces)
+  #   !has_legal_moves?(color, board_pieces)
+  # end
 
-  # Check if the game is in stalemate
-  def stalemate?(color)
-    !king_in_check?(color) && !has_legal_moves?(color, board_pieces)
-  end
+  # # Check if the game is in stalemate
+  # def stalemate?(color, board_pieces)
+  #   !king_in_check?(color, board_pieces) && !has_legal_moves?(color, board_pieces)
+  # end
 
   # Check if the game is a draw due to threefold repetition
-  def draw_threefold_repetition?
-    self.board_states.count(self.board_state) == 3
-  end
+  # def draw_threefold_repetition?
+  #   self.board_states.count(self.board_state) == 3
+  # end
 
   # Check if the game is a draw due to insufficient material
-  def draw_insufficient_material?
-    pieces = self.board_state.flatten.compact
-    # Filter by piece type
-    bishops = pieces.select { |p| p.is_a?(Bishop) }
-    knights = pieces.select { |p| p.is_a?(Knight) }
-    non_king_pieces = pieces.count { |p| !p.is_a?(King) }
+  # def draw_insufficient_material?
+  #   pieces = self.board_state.flatten.compact
+  #   # Filter by piece type
+  #   bishops = pieces.select { |p| p.is_a?(Bishop) }
+  #   knights = pieces.select { |p| p.is_a?(Knight) }
+  #   non_king_pieces = pieces.count { |p| !p.is_a?(King) }
 
-    # Draw scenarios
-    return true if non_king_pieces == 0 # Only kings left
-    return true if non_king_pieces == 1 && (bishops.count == 1 || knights.count == 1) # King and bishop or king and knight
-    return true if bishops.count == 2 && bishops.all? { |b| b.color == bishops.first.color } # Two bishops on the same color
-    false
-  end
+  #   # Draw scenarios
+  #   return true if non_king_pieces == 0 # Only kings left
+  #   return true if non_king_pieces == 1 && (bishops.count == 1 || knights.count == 1) # King and bishop or king and knight
+  #   return true if bishops.count == 2 && bishops.all? { |b| b.color == bishops.first.color } # Two bishops on the same color
+  #   false
+  # end
 
-  # Check if the game is over
-  def game_over?
-    checkmate?("white") || checkmate?("black") ||
-      stalemate?("white") || stalemate?("black") ||
-      draw_insufficient_material? || draw_threefold_repetition?
-  end
+  # # Check if the game is over
+  # def game_over?(board_pieces)
+  #   checkmate?("white", board_pieces) || checkmate?("black", board_pieces) ||
+  #     stalemate?("white", board_pieces) || stalemate?("black", board_pieces)
+  #     # draw_insufficient_material? || draw_threefold_repetition?
+  # end
 end
