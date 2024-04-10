@@ -24,7 +24,7 @@ class King < Piece
         valid_moves << [x, y]
       end
     end
-    valid_moves.concat(castle_moves) if can_castle?
+    # valid_moves.concat(castle_moves) if can_castle?
     valid_moves
   end
 
